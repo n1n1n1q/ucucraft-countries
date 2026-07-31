@@ -1,0 +1,20 @@
+# Language file to load from the lang/ folder (without extension).
+language: en
+
+invite:
+  # How long a pending invite stays valid, in seconds.
+  duration-seconds: 60
+  # How often expired invites are purged from memory, in seconds.
+  sweep-seconds: 20
+
+country:
+  name-min-length: 3
+  name-max-length: 16
+  # Allowed characters for country names.
+  name-pattern: "^[A-Za-z0-9_]+$"
+  # If true, only the leader may invite new members.
+  invite-leader-only: true
+
+list:
+  # Countries shown per page in /country list.
+  page-size: 10

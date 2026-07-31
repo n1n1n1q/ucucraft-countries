@@ -1,0 +1,21 @@
+name: Countries
+version: '${version}'
+main: com.ucucraft.countries.CountriesPlugin
+api-version: '1.21'
+author: ucucraft
+description: Create and manage countries.
+commands:
+  country:
+    description: Manage countries.
+    aliases: [c]
+    usage: /country <create|invite|accept|leave|disband|rename|info|list>
+  accept:
+    description: Accept a pending country invite.
+    usage: /accept <player>
+permissions:
+  countries.use:
+    description: Access to base country commands.
+    default: true
+  countries.admin:
+    description: Administrative access.
+    default: op
