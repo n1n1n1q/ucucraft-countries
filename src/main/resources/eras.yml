@@ -1,0 +1,162 @@
+# Era customization.
+#
+# 'eras' is an ordered list - position in the list is the era index.
+# 'unlocks' gates materials: a material becomes craftable/placeable/usable only once the
+# country reaches the era that lists it. Materials listed nowhere are ALWAYS allowed, so
+# only list what you actually want to gate.
+#
+# Requirement types:
+#   resource    items: { MATERIAL: amount, ... }   (consumed on ascension)
+#   statistic   statistic: <Bukkit Statistic>, material/entity: <optional>, amount: N,
+#               scope: total (sum of members) | any (best single member)
+#   time_in_era hours: N
+#   members     amount: N
+#   admin       id: <criteria-id>, display: "<text>"   (closed via /countryadmin complete)
+
+settings:
+  starting-era:
+    # relative -> mean era of existing countries minus 'offset'
+    # lowest   -> always the first era
+    # fixed    -> always the era named in 'fixed'
+    mode: relative
+    offset: 3
+    fixed: stone-age
+  # Ascend automatically the moment the last requirement is satisfied.
+  auto-advance: true
+  # Announce ascensions to the whole server.
+  broadcast: true
+  gate:
+    craft: true
+    place: true
+    use: true
+    message-cooldown-ms: 2000
+
+eras:
+  - id: stone-age
+    display: "<gray>Stone Age</gray>"
+    unlocks: []
+    requirements: []
+
+  - id: copper-age
+    display: "<gold>Copper Age</gold>"
+    unlocks:
+      - COPPER_INGOT
+      - COPPER_BLOCK
+      - CUT_COPPER
+      - LIGHTNING_ROD
+    requirements:
+      - type: resource
+        items:
+          COBBLESTONE: 128
+          OAK_LOG: 64
+      - type: statistic
+        statistic: MINE_BLOCK
+        material: STONE
+        amount: 200
+        scope: total
+
+  - id: iron-age
+    display: "<white>Iron Age</white>"
+    unlocks:
+      - IRON_INGOT
+      - IRON_BLOCK
+      - IRON_PICKAXE
+      - IRON_SWORD
+      - IRON_AXE
+      - IRON_CHESTPLATE
+      - IRON_HELMET
+      - IRON_LEGGINGS
+      - IRON_BOOTS
+      - ANVIL
+      - SHIELD
+    requirements:
+      - type: resource
+        items:
+          COPPER_INGOT: 64
+          COBBLESTONE: 256
+      - type: members
+        amount: 2
+      - type: time_in_era
+        hours: 2
+      - type: admin
+        id: town-hall
+        display: "Build a town hall"
+
+  - id: gold-age
+    display: "<yellow>Golden Age</yellow>"
+    unlocks:
+      - GOLD_INGOT
+      - GOLD_BLOCK
+      - GOLDEN_APPLE
+      - CLOCK
+      - BREWING_STAND
+      - ENCHANTING_TABLE
+    requirements:
+      - type: resource
+        items:
+          IRON_INGOT: 128
+          COAL: 128
+      - type: statistic
+        statistic: MOB_KILLS
+        amount: 250
+        scope: total
+      - type: time_in_era
+        hours: 6
+
+  - id: diamond-age
+    display: "<aqua>Diamond Age</aqua>"
+    unlocks:
+      - DIAMOND
+      - DIAMOND_BLOCK
+      - DIAMOND_PICKAXE
+      - DIAMOND_SWORD
+      - DIAMOND_AXE
+      - DIAMOND_CHESTPLATE
+      - DIAMOND_HELMET
+      - DIAMOND_LEGGINGS
+      - DIAMOND_BOOTS
+      - OBSIDIAN
+      - ENDER_CHEST
+    requirements:
+      - type: resource
+        items:
+          GOLD_INGOT: 128
+          IRON_BLOCK: 32
+      - type: members
+        amount: 4
+      - type: time_in_era
+        hours: 12
+      - type: admin
+        id: great-mine
+        display: "Excavate a great mine"
+
+  - id: netherite-age
+    display: "<dark_red>Netherite Age</dark_red>"
+    unlocks:
+      - NETHERITE_INGOT
+      - NETHERITE_BLOCK
+      - NETHERITE_PICKAXE
+      - NETHERITE_SWORD
+      - NETHERITE_AXE
+      - NETHERITE_CHESTPLATE
+      - NETHERITE_HELMET
+      - NETHERITE_LEGGINGS
+      - NETHERITE_BOOTS
+      - BEACON
+      - ELYTRA
+    requirements:
+      - type: resource
+        items:
+          DIAMOND: 64
+          ANCIENT_DEBRIS: 16
+          OBSIDIAN: 64
+      - type: statistic
+        statistic: MINE_BLOCK
+        material: ANCIENT_DEBRIS
+        amount: 32
+        scope: total
+      - type: time_in_era
+        hours: 24
+      - type: admin
+        id: grand-monument
+        display: "Raise a grand monument"

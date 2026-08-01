@@ -7,6 +7,20 @@ invite:
   # How often expired invites are purged from memory, in seconds.
   sweep-seconds: 20
 
+diplomacy:
+  # How long a pending alliance invite or peace offer stays valid, in seconds.
+  invite-duration-seconds: 60
+
+# Global chat announcements. Set any to false to keep that event quiet
+# (the actor still gets a private confirmation).
+announce:
+  created: true
+  disbanded: true
+  renamed: true
+  alliance: true
+  war: true
+  peace: true
+
 country:
   name-min-length: 3
   name-max-length: 16
@@ -18,3 +32,9 @@ country:
 list:
   # Countries shown per page in /country list.
   page-size: 10
+
+vault:
+  # Number of vault pages per country.
+  pages: 3
+  # Content rows per page (1-5). A navigation row is added below them.
+  rows: 5

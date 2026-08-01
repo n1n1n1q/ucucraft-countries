@@ -31,7 +31,14 @@ public final class DisbandSub implements SubCommand {
             return;
         }
         String name = country.getName();
+        services.diplomacy.removeAllInvolving(country.getId());
+        services.vaults.remove(country);
+        services.vaults.save();
         services.countries.disband(country);
-        services.messages.send(player, "disbanded", "country", name);
+        if (services.config.announce("disbanded")) {
+            services.messages.broadcast("announce-disbanded", "country", name, "player", player.getName());
+        } else {
+            services.messages.send(player, "disbanded", "country", name);
+        }
     }
 }

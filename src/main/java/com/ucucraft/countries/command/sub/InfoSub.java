@@ -39,8 +39,16 @@ public final class InfoSub implements SubCommand {
         }
         services.messages.sendRaw(player, "info-header", "country", country.getName());
         services.messages.sendRaw(player, "info-leader", "leader", country.getLeaderName());
+        if (!services.eras.registry().isEmpty()) {
+            services.messages.sendRaw(player, "info-era",
+                    "era", services.eras.eraOf(country).getDisplay());
+        }
         services.messages.sendRaw(player, "info-members",
                 "members", String.join(", ", country.getMemberNames()));
+        services.messages.sendRaw(player, "info-allies",
+                "allies", Diplo.names(services, country.getAllies()));
+        services.messages.sendRaw(player, "info-wars",
+                "wars", Diplo.names(services, country.getWars()));
     }
 
     @Override

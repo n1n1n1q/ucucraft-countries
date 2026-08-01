@@ -8,14 +8,31 @@ commands:
   country:
     description: Manage countries.
     aliases: [c]
-    usage: /country <create|invite|accept|leave|disband|rename|info|list>
+    usage: /country <create|invite|accept|leave|disband|rename|info|list|era|vault|ally|war|peace>
   accept:
     description: Accept a pending country invite.
     usage: /accept <player>
+  countryadmin:
+    description: Administrate country eras and criteria.
+    aliases: [ca]
+    usage: /countryadmin <complete|revoke|setera|reload> ...
 permissions:
   countries.use:
     description: Access to base country commands.
     default: true
   countries.admin:
-    description: Administrative access.
+    description: Full administrative access.
+    default: op
+    children:
+      countries.admin.criteria: true
+      countries.admin.setera: true
+      countries.admin.reload: true
+  countries.admin.criteria:
+    description: Complete or revoke admin era criteria.
+    default: op
+  countries.admin.setera:
+    description: Set a country's era directly.
+    default: op
+  countries.admin.reload:
+    description: Reload era and language files.
     default: op

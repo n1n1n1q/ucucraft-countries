@@ -34,7 +34,11 @@ public final class CreateSub implements SubCommand {
         if (!Names.report(services, player, status, name)) {
             return;
         }
-        services.countries.create(name, player.getUniqueId());
-        services.messages.send(player, "created", "country", name);
+        services.countries.create(name, player.getUniqueId(), services.eras.startingIndex());
+        if (services.config.announce("created")) {
+            services.messages.broadcast("announce-created", "country", name, "player", player.getName());
+        } else {
+            services.messages.send(player, "created", "country", name);
+        }
     }
 }

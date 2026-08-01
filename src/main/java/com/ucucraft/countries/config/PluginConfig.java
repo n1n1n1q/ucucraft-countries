@@ -46,4 +46,20 @@ public final class PluginConfig {
     public int listPageSize() {
         return cfg().getInt("list.page-size", 10);
     }
+
+    public long diplomacyDurationSeconds() {
+        return cfg().getLong("diplomacy.invite-duration-seconds", 60);
+    }
+
+    public boolean announce(String event) {
+        return cfg().getBoolean("announce." + event, true);
+    }
+
+    public int vaultPages() {
+        return Math.max(1, cfg().getInt("vault.pages", 3));
+    }
+
+    public int vaultRows() {
+        return Math.min(5, Math.max(1, cfg().getInt("vault.rows", 5)));
+    }
 }

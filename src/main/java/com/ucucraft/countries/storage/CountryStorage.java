@@ -44,10 +44,24 @@ public final class CountryStorage {
             if (leaderRaw == null) {
                 continue;
             }
-            Country country = new Country(name, UUID.fromString(leaderRaw));
+            String idRaw = section.getString("id");
+            UUID id = idRaw != null ? UUID.fromString(idRaw) : UUID.randomUUID();
+            Country country = new Country(id, name, UUID.fromString(leaderRaw));
             for (String member : section.getStringList("members")) {
                 country.addMember(UUID.fromString(member));
             }
+            for (String trusted : section.getStringList("trusted")) {
+                country.getTrusted().add(UUID.fromString(trusted));
+            }
+            for (String ally : section.getStringList("allies")) {
+                country.getAllies().add(UUID.fromString(ally));
+            }
+            for (String war : section.getStringList("wars")) {
+                country.getWars().add(UUID.fromString(war));
+            }
+            country.getCompletedCriteria().addAll(section.getStringList("completed-criteria"));
+            country.setEraIndex(section.getInt("era", 0));
+            country.setEraSince(section.getLong("era-since", System.currentTimeMillis()));
             result.add(country);
         }
         return result;
@@ -57,13 +71,16 @@ public final class CountryStorage {
         YamlConfiguration yaml = new YamlConfiguration();
         for (Country country : countries) {
             String path = "countries." + country.key();
+            yaml.set(path + ".id", country.getId().toString());
             yaml.set(path + ".name", country.getName());
             yaml.set(path + ".leader", country.getLeader().toString());
-            List<String> members = new ArrayList<>();
-            for (UUID uuid : country.getMembers()) {
-                members.add(uuid.toString());
-            }
-            yaml.set(path + ".members", members);
+            yaml.set(path + ".members", toStrings(country.getMembers()));
+            yaml.set(path + ".trusted", toStrings(country.getTrusted()));
+            yaml.set(path + ".allies", toStrings(country.getAllies()));
+            yaml.set(path + ".wars", toStrings(country.getWars()));
+            yaml.set(path + ".completed-criteria", new ArrayList<>(country.getCompletedCriteria()));
+            yaml.set(path + ".era", country.getEraIndex());
+            yaml.set(path + ".era-since", country.getEraSince());
         }
         try {
             if (!plugin.getDataFolder().exists()) {
@@ -73,5 +90,13 @@ public final class CountryStorage {
         } catch (IOException e) {
             plugin.getLogger().log(Level.SEVERE, "Failed to save countries.yml", e);
         }
+    }
+
+    private List<String> toStrings(Collection<UUID> uuids) {
+        List<String> list = new ArrayList<>();
+        for (UUID uuid : uuids) {
+            list.add(uuid.toString());
+        }
+        return list;
     }
 }

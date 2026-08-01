@@ -40,7 +40,12 @@ public final class RenameSub implements SubCommand {
         if (!Names.report(services, player, status, name)) {
             return;
         }
+        String oldName = country.getName();
         services.countries.rename(country, name);
-        services.messages.send(player, "renamed", "country", name);
+        if (services.config.announce("renamed")) {
+            services.messages.broadcast("announce-renamed", "old", oldName, "country", name);
+        } else {
+            services.messages.send(player, "renamed", "country", name);
+        }
     }
 }
