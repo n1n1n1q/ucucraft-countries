@@ -45,6 +45,9 @@ public final class InfoSub implements SubCommand {
         }
         services.messages.sendRaw(player, "info-members",
                 "members", String.join(", ", country.getMemberNames()));
+        services.messages.sendRaw(player, "info-chunks",
+                "chunks", String.valueOf(services.claims.count(country.getId())),
+                "limit", Claims.limitText(services, services.claims.limit(country)));
         services.messages.sendRaw(player, "info-allies",
                 "allies", Diplo.names(services, country.getAllies()));
         services.messages.sendRaw(player, "info-wars",

@@ -2,6 +2,7 @@ package com.ucucraft.countries;
 
 import org.bukkit.plugin.Plugin;
 
+import com.ucucraft.countries.claim.ClaimManager;
 import com.ucucraft.countries.config.Messages;
 import com.ucucraft.countries.config.PluginConfig;
 import com.ucucraft.countries.era.EraManager;
@@ -21,10 +22,11 @@ public final class Services {
     public final DiplomacyManager diplomacy;
     public final EraManager eras;
     public final VaultManager vaults;
+    public final ClaimManager claims;
 
     public Services(Plugin plugin, PluginConfig config, Messages messages, Messages eraMessages,
                     CountryManager countries, InviteManager invites, DiplomacyManager diplomacy,
-                    EraManager eras, VaultManager vaults) {
+                    EraManager eras, VaultManager vaults, ClaimManager claims) {
         this.plugin = plugin;
         this.config = config;
         this.messages = messages;
@@ -34,5 +36,6 @@ public final class Services {
         this.diplomacy = diplomacy;
         this.eras = eras;
         this.vaults = vaults;
+        this.claims = claims;
     }
 }

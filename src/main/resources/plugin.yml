@@ -4,11 +4,12 @@ main: com.ucucraft.countries.CountriesPlugin
 api-version: '1.21'
 author: ucucraft
 description: Create and manage countries.
+softdepend: [PlaceholderAPI]
 commands:
   country:
     description: Manage countries.
     aliases: [c]
-    usage: /country <create|invite|accept|leave|disband|rename|info|list|era|vault|ally|war|peace>
+    usage: /country <create|invite|accept|leave|disband|rename|info|list|era|claim|unclaim|vault|ally|war|peace>
   accept:
     description: Accept a pending country invite.
     usage: /accept <player>

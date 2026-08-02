@@ -1,5 +1,7 @@
 package com.ucucraft.countries.config;
 
+import java.util.List;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -17,6 +19,16 @@ public final class PluginConfig {
 
     public String language() {
         return cfg().getString("language", "en");
+    }
+
+    /** MiniMessage prefix prepended to plugin messages. */
+    public String prefix() {
+        return cfg().getString("prefix.default", "");
+    }
+
+    /** Prefix for era messages; falls back to {@link #prefix()}. */
+    public String eraPrefix() {
+        return cfg().getString("prefix.eras", prefix());
     }
 
     public long inviteDurationSeconds() {
@@ -61,5 +73,36 @@ public final class PluginConfig {
 
     public int vaultRows() {
         return Math.min(5, Math.max(1, cfg().getInt("vault.rows", 5)));
+    }
+
+    /** Base chunk allowance; 0 or less means unlimited. */
+    public int claimBaseLimit() {
+        return cfg().getInt("claim.base-limit", 16);
+    }
+
+    public int claimPerEraBonus() {
+        return cfg().getInt("claim.per-era-bonus", 4);
+    }
+
+    /** If true, only the leader may claim or unclaim land; otherwise leader and trusted members. */
+    public boolean claimLeaderOnly() {
+        return cfg().getBoolean("claim.leader-only", true);
+    }
+
+    public boolean claimRequireAdjacent() {
+        return cfg().getBoolean("claim.require-adjacent", true);
+    }
+
+    public List<String> claimDisabledWorlds() {
+        return cfg().getStringList("claim.disabled-worlds");
+    }
+
+    public boolean placeholdersEnabled() {
+        return cfg().getBoolean("placeholders.enabled", true);
+    }
+
+    /** Placeholder identifier, i.e. the "country" in %country_name%. */
+    public String placeholderIdentifier() {
+        return cfg().getString("placeholders.identifier", "country");
     }
 }

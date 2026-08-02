@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import com.ucucraft.countries.Services;
 import com.ucucraft.countries.command.sub.AcceptSub;
 import com.ucucraft.countries.command.sub.AllianceSub;
+import com.ucucraft.countries.command.sub.ClaimSub;
 import com.ucucraft.countries.command.sub.CreateSub;
 import com.ucucraft.countries.command.sub.DisbandSub;
 import com.ucucraft.countries.command.sub.EraSub;
@@ -24,6 +25,7 @@ import com.ucucraft.countries.command.sub.LeaveSub;
 import com.ucucraft.countries.command.sub.ListSub;
 import com.ucucraft.countries.command.sub.PeaceSub;
 import com.ucucraft.countries.command.sub.RenameSub;
+import com.ucucraft.countries.command.sub.UnclaimSub;
 import com.ucucraft.countries.command.sub.VaultSub;
 import com.ucucraft.countries.command.sub.WarSub;
 import com.ucucraft.countries.vault.VaultListener;
@@ -44,6 +46,8 @@ public final class CountryCommand implements TabExecutor {
         register(new InfoSub(services));
         register(new ListSub(services));
         register(new EraSub(services));
+        register(new ClaimSub(services));
+        register(new UnclaimSub(services));
         register(new VaultSub(services, vaultGui));
         register(new AllianceSub(services));
         register(new WarSub(services));
@@ -100,8 +104,8 @@ public final class CountryCommand implements TabExecutor {
     private void sendHelp(Player player) {
         services.messages.sendRaw(player, "help-header");
         for (String key : new String[]{"create", "invite", "accept", "leave",
-                "disband", "rename", "info", "list", "era", "vault",
-                "ally", "war", "peace"}) {
+                "disband", "rename", "info", "list", "era", "claim", "unclaim",
+                "vault", "ally", "war", "peace"}) {
             services.messages.sendRaw(player, "help-" + key);
         }
     }

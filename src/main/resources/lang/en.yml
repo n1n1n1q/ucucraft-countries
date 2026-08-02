@@ -1,5 +1,3 @@
-prefix: "<gray>[<aqua>Countries</aqua>]</gray> "
-
 player-only: "<red>Only players can use this command."
 no-permission: "<red>You don't have permission to do that."
 unknown-subcommand: "<red>Unknown subcommand. Use <yellow>/country</yellow> for help."
@@ -23,6 +21,8 @@ help-rename: "<yellow>/country rename <name></yellow> <gray>- Rename your countr
 help-info: "<yellow>/country info [name]</yellow> <gray>- Show country info."
 help-list: "<yellow>/country list [page]</yellow> <gray>- List countries."
 help-era: "<yellow>/country era</yellow> <gray>- Show era progress."
+help-claim: "<yellow>/country claim</yellow> <gray>- Claim the chunk you stand in."
+help-unclaim: "<yellow>/country unclaim</yellow> <gray>- Release the chunk you stand in."
 help-vault: "<yellow>/country vault</yellow> <gray>- Open the country vault."
 help-ally: "<yellow>/country ally <...></yellow> <gray>- Manage alliances."
 help-war: "<yellow>/country war <country></yellow> <gray>- Declare war."
@@ -59,6 +59,7 @@ info-header: "<gray>--- <aqua>{country}</aqua> ---"
 info-leader: "<gray>Leader: <white>{leader}"
 info-era: "<gray>Era: <white>{era}"
 info-members: "<gray>Members: <white>{members}"
+info-chunks: "<gray>Land: <white>{chunks}/{limit} chunks"
 info-allies: "<gray>Allies: <white>{allies}"
 info-wars: "<gray>At war with: <red>{wars}"
 
@@ -92,6 +93,24 @@ peace-already: "<red>You already offered peace to <yellow>{country}</yellow>."
 peace-offered: "<green>You offered peace to <yellow>{country}</yellow>. It expires in {seconds}s."
 peace-received: "<green><yellow>{country}</yellow> offered peace. Type <yellow>/country peace {country}</yellow> to accept."
 peace-made: "<green>You are now at peace with <yellow>{country}</yellow>."
+
+# --- Land claims ---
+claim-wilderness: "Wilderness"
+claim-unlimited: "unlimited"
+claim-not-trusted: "<red>Only the leader or a trusted member can manage land."
+claim-success: "<green>Claimed chunk <yellow>{x}, {z}</yellow> in <yellow>{world}</yellow>. <gray>({used}/{limit})"
+claim-already-owned: "<red>Your country already owns this chunk."
+claim-taken: "<red>This chunk belongs to <yellow>{country}</yellow>."
+claim-limit-reached: "<red>Your country can only own {limit} chunks."
+claim-not-adjacent: "<red>Claims must touch land you already own."
+claim-world-disabled: "<red>Claiming is disabled in <yellow>{world}</yellow>."
+claim-failed: "<red>That chunk could not be claimed."
+unclaim-success: "<green>Released chunk <yellow>{x}, {z}</yellow> in <yellow>{world}</yellow>. <gray>({used}/{limit})"
+unclaim-wilderness: "<red>This chunk is not claimed."
+unclaim-not-owner: "<red>This chunk belongs to <yellow>{country}</yellow>."
+
+# --- PlaceholderAPI ---
+placeholder-no-country: "None"
 
 list-header: "<gray>--- <aqua>Countries</aqua> (page {page}/{pages}) ---"
 list-entry: "<gray>- <yellow>{country}</yellow> <gray>({members} members)"

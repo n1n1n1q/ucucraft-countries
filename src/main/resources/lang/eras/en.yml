@@ -1,4 +1,3 @@
-prefix: "<gray>[<gold>Eras</gold>]</gray> "
 
 # --- eras ---
 era-current: "<gray>Era: <white>{era}"

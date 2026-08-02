@@ -2,14 +2,20 @@ package com.ucucraft.countries;
 
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.ucucraft.countries.api.CountriesAPI;
+import com.ucucraft.countries.api.impl.CountriesAPIImpl;
+import com.ucucraft.countries.claim.ClaimManager;
+import com.ucucraft.countries.claim.ClaimStorage;
 import com.ucucraft.countries.command.AcceptCommand;
 import com.ucucraft.countries.command.AdminCommand;
 import com.ucucraft.countries.command.CountryCommand;
 import com.ucucraft.countries.config.Messages;
 import com.ucucraft.countries.config.PluginConfig;
 import com.ucucraft.countries.era.EraGateListener;
+import com.ucucraft.countries.hook.CountryPlaceholders;
 import com.ucucraft.countries.era.EraManager;
 import com.ucucraft.countries.era.EraRegistry;
 import com.ucucraft.countries.manager.CountryManager;
@@ -26,6 +32,8 @@ public final class CountriesPlugin extends JavaPlugin {
     private InviteManager invites;
     private DiplomacyManager diplomacy;
     private VaultManager vaults;
+    private ClaimManager claims;
+    private CountryPlaceholders placeholders;
 
     @Override
     public void onEnable() {
@@ -33,9 +41,9 @@ public final class CountriesPlugin extends JavaPlugin {
 
         PluginConfig config = new PluginConfig(this);
         Messages messages = new Messages(this);
-        messages.load(config.language());
+        messages.load(config.language(), config.prefix());
         Messages eraMessages = new Messages(this, "lang/eras");
-        eraMessages.load(config.language());
+        eraMessages.load(config.language(), config.eraPrefix());
 
         countries = new CountryManager(config, new CountryStorage(this));
         countries.load();
@@ -45,12 +53,23 @@ public final class CountriesPlugin extends JavaPlugin {
         vaults = new VaultManager(config, new VaultStorage(this));
         vaults.load();
 
+        claims = new ClaimManager(config, new ClaimStorage(this));
+        claims.load();
+
         EraRegistry registry = new EraRegistry(this, vaults);
         registry.load();
         EraManager eras = new EraManager(registry, countries, eraMessages);
 
         Services services = new Services(this, config, messages, eraMessages,
-                countries, invites, diplomacy, eras, vaults);
+                countries, invites, diplomacy, eras, vaults, claims);
+
+        getServer().getServicesManager().register(CountriesAPI.class,
+                new CountriesAPIImpl(services), this, ServicePriority.Normal);
+
+        if (config.placeholdersEnabled() && getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            placeholders = new CountryPlaceholders(services);
+            placeholders.register();
+        }
 
         VaultListener vaultListener = new VaultListener(services);
         getServer().getPluginManager().registerEvents(vaultListener, this);
@@ -69,11 +88,18 @@ public final class CountriesPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (placeholders != null) {
+            placeholders.unregister();
+        }
+        getServer().getServicesManager().unregisterAll(this);
         if (countries != null) {
             countries.save();
         }
         if (vaults != null) {
             vaults.save();
+        }
+        if (claims != null) {
+            claims.save();
         }
         if (invites != null) {
             invites.clear();

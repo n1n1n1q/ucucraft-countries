@@ -135,8 +135,8 @@ public final class AdminCommand implements TabExecutor {
         }
         services.plugin.reloadConfig();
         services.eras.registry().load();
-        services.messages.load(services.config.language());
-        services.eraMessages.load(services.config.language());
+        services.messages.load(services.config.language(), services.config.prefix());
+        services.eraMessages.load(services.config.language(), services.config.eraPrefix());
         services.eraMessages.send(sender, "admin-reloaded");
     }
 

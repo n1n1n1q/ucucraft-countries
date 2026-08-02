@@ -1,6 +1,11 @@
 # Language file to load from the lang/ folder (without extension).
 language: en
 
+# Prefixes prepended to plugin messages (MiniMessage). Leave empty for none.
+prefix:
+  default: "<gray>[<aqua>Countries</aqua>]</gray> "
+  eras: "<gray>[<gold>Eras</gold>]</gray> "
+
 invite:
   # How long a pending invite stays valid, in seconds.
   duration-seconds: 60
@@ -38,3 +43,21 @@ vault:
   pages: 3
   # Content rows per page (1-5). A navigation row is added below them.
   rows: 5
+
+claim:
+  # Chunks a country may own before any era bonus. Set to 0 for unlimited.
+  base-limit: 16
+  # Extra chunks granted for each era the country has advanced.
+  per-era-bonus: 4
+  # If true, only the leader may claim/unclaim; otherwise leader and trusted members.
+  leader-only: true
+  # New claims must touch an existing claim of the same country (the first is free).
+  require-adjacent: true
+  # Worlds where claiming is not allowed.
+  disabled-worlds: []
+
+placeholders:
+  # Register the PlaceholderAPI expansion when PlaceholderAPI is installed.
+  enabled: true
+  # Placeholder namespace: "country" yields %country%, %country_leader%, ...
+  identifier: country

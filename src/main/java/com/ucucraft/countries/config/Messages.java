@@ -30,7 +30,8 @@ public final class Messages {
         this.folder = folder;
     }
 
-    public void load(String language) {
+    public void load(String language, String prefix) {
+        this.prefix = prefix;
         File dir = new File(plugin.getDataFolder(), folder);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -48,7 +49,6 @@ public final class Messages {
         }
         this.lang = YamlConfiguration.loadConfiguration(file);
         this.defaults = loadBundled(fallback);
-        this.prefix = raw("prefix");
     }
 
     private YamlConfiguration loadBundled(String resource) {
