@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(java -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain build --console=plain 2>&1)",
+      "PowerShell($sp = \"C:\\\\Users\\\\basys\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-basys-OneDrive-----------ucucraft-countries\\\\a4b15a29-32a0-4842-b96c-679871f7123c\\\\scratchpad\"; New-Item -ItemType Directory -Force $sp | Out-Null; Set-Location $sp; & \"$env:JAVA_HOME\\\\bin\\\\jar.exe\" xf \"C:\\\\Users\\\\basys\\\\.gradle\\\\caches\\\\modules-2\\\\files-2.1\\\\me.clip\\\\placeholderapi\\\\2.11.6\\\\d9ad7a4c2759a6cc5c824cf56e5d06f12333f88\\\\placeholderapi-2.11.6.jar\" me/clip/placeholderapi/replacer/CharsReplacer.class; & \"$env:JAVA_HOME\\\\bin\\\\javap.exe\" -c -p me/clip/placeholderapi/replacer/CharsReplacer.class | Out-File -Encoding utf8 \"$sp\\\\charsreplacer.txt\"; \\(Get-Content \"$sp\\\\charsreplacer.txt\" | Measure-Object -Line\\).Lines)",
+      "Bash(cd \"c:/Users/basys/OneDrive/Документы/ucucraft-countries\" *)",
+      "Read(//tmp/**)",
+      "Bash(cd \"c:/Users/basys/OneDrive/Документы/ucucraft-countries\" && until grep -qE 'Done \\\\\\([0-9.]+s\\\\\\)! For help|BUILD FAILED|FAILURE:|Caused by' /tmp/server.log 2>/dev/null; do sleep 3; done; echo \"server reached a terminal state\")",
+      "Bash(cd \"c:/Users/basys/OneDrive/Документы/ucucraft-countries\" && tail -40 /tmp/server.log)",
+      "Bash(curl -s \"https://fill.papermc.io/v3/projects/paper\")",
+      "Bash(curl -s \"https://fill.papermc.io/v3/projects/paper/versions/1.21.4/builds\")",
+      "Bash(python -c \"import sys,json; b=json.load\\(sys.stdin\\)[0]; print\\(b['id']\\); print\\(b['downloads']['server:default']['url']\\)\")",
+      "Bash(mkdir -p /c/Users/basys/AppData/Local/Temp/claude/c--Users-basys-OneDrive-----------ucucraft-countries/a4b15a29-32a0-4842-b96c-679871f7123c/scratchpad/server/plugins)",
+      "Read(//c/Users/basys/AppData/Local/Temp/claude/c--Users-basys-OneDrive-----------ucucraft-countries/a4b15a29-32a0-4842-b96c-679871f7123c/scratchpad/**)",
+      "Bash(curl -sL -o paper.jar \"https://fill-data.papermc.io/v1/objects/5ee4f542f628a14c644410b08c94ea42e772ef4d29fe92973636b6813d4eaffc/paper-1.21.4-232.jar\")",
+      "Bash(echo \"eula=true\")",
+      "Bash(printf 'online-mode=false\\\\nlevel-type=flat\\\\nmax-players=2\\\\nspawn-protection=0\\\\n')",
+      "Bash(java -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain build --console=plain)",
+      "Bash(java -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain clean build --console=plain)",
+      "Read(//c/Users/basys/AppData/Local/Temp/claude/c--Users-basys-OneDrive-----------ucucraft-countries/a4b15a29-32a0-4842-b96c-679871f7123c/scratchpad/server/**)",
+      "Bash(java -Xmx1G -jar paper.jar --nogui)",
+      "Bash(SP=\"/c/Users/basys/AppData/Local/Temp/claude/c--Users-basys-OneDrive-----------ucucraft-countries/a4b15a29-32a0-4842-b96c-679871f7123c/scratchpad\" *)",
+      "Bash(rm -f boot.log)",
+      "Bash(curl -s \"https://api.github.com/repos/jpenilla/run-task/releases?per_page=5\")",
+      "Bash(curl -s \"https://plugins.gradle.org/m2/org/gradle/toolchains/foojay-resolver-convention/org.gradle.toolchains.foojay-resolver-convention.gradle.plugin/maven-metadata.xml\")",
+      "Bash(curl -s \"https://services.gradle.org/versions/current\")"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\basys\\AppData\\Local\\Temp\\claude\\c--Users-basys-OneDrive-----------ucucraft-countries\\a4b15a29-32a0-4842-b96c-679871f7123c\\scratchpad\\server"
+    ]
+  }
+}

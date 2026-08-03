@@ -1,6 +1,6 @@
 # Countries
 
-A Paper (1.21.x) plugin for creating and managing countries.
+A Paper (26.2) plugin for creating and managing countries.
 
 ## Commands
 
@@ -86,7 +86,7 @@ Every `CountryView` collection is unmodifiable — the API is read-only.
 
 ## Building
 
-Requires JDK 21.
+Requires JDK 25 (the Gradle toolchain auto-provisions it if it isn't already installed).
 
 ```
 ./gradlew build
@@ -113,4 +113,4 @@ Or clone the project to an ASCII-only path.
 java -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain runServer
 ```
 
-`run-paper` downloads and launches Paper 1.21.4 with the plugin installed.
+`run-paper` downloads and launches Paper 26.2 with the plugin installed.

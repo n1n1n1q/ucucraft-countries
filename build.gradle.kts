@@ -1,13 +1,13 @@
 plugins {
     java
-    id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("xyz.jpenilla.run-paper") version "3.0.2"
 }
 
 group = project.property("group") as String
 version = project.property("version") as String
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
 }
 
 repositories {
@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.2.build.87-stable")
     compileOnly("me.clip:placeholderapi:2.11.6")
 }
 
@@ -31,6 +31,6 @@ tasks {
     }
 
     runServer {
-        minecraftVersion("1.21.4")
+        minecraftVersion("26.2")
     }
 }
