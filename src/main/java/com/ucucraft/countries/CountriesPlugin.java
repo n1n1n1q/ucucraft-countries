@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.ucucraft.countries.api.CountriesAPI;
 import com.ucucraft.countries.api.impl.CountriesAPIImpl;
 import com.ucucraft.countries.claim.ClaimManager;
+import com.ucucraft.countries.claim.ClaimProtectionListener;
 import com.ucucraft.countries.claim.ClaimStorage;
 import com.ucucraft.countries.command.AcceptCommand;
 import com.ucucraft.countries.command.AdminCommand;
@@ -75,6 +76,7 @@ public final class CountriesPlugin extends JavaPlugin {
         VaultListener vaultListener = new VaultListener(services);
         getServer().getPluginManager().registerEvents(vaultListener, this);
         getServer().getPluginManager().registerEvents(new EraGateListener(services), this);
+        getServer().getPluginManager().registerEvents(new ClaimProtectionListener(services), this);
 
         bind("country", new CountryCommand(services, vaultListener));
         bind("accept", new AcceptCommand(services));

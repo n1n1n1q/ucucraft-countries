@@ -81,7 +81,7 @@ public final class PluginConfig {
     }
 
     public int claimPerEraBonus() {
-        return cfg().getInt("claim.per-era-bonus", 4);
+        return cfg().getInt("claim.per-member-bonus", 4);
     }
 
     /** If true, only the leader may claim or unclaim land; otherwise leader and trusted members. */
@@ -95,6 +95,47 @@ public final class PluginConfig {
 
     public List<String> claimDisabledWorlds() {
         return cfg().getStringList("claim.disabled-worlds");
+    }
+
+    public boolean claimProtectionEnabled() {
+        return cfg().getBoolean("claim.protection.enabled", true);
+    }
+
+    public boolean claimProtectionBuild() {
+        return cfg().getBoolean("claim.protection.build", true);
+    }
+
+    public boolean claimProtectionContainers() {
+        return cfg().getBoolean("claim.protection.containers", true);
+    }
+
+    public boolean claimProtectionBuckets() {
+        return cfg().getBoolean("claim.protection.buckets", true);
+    }
+
+    public boolean claimProtectionExplosions() {
+        return cfg().getBoolean("claim.protection.explosions", true);
+    }
+
+    public boolean claimProtectionFire() {
+        return cfg().getBoolean("claim.protection.fire", true);
+    }
+
+    public boolean claimProtectionMobGriefing() {
+        return cfg().getBoolean("claim.protection.mob-griefing", true);
+    }
+
+    public boolean claimPvpEnabled() {
+        return cfg().getBoolean("claim.protection.pvp.enabled", true);
+    }
+
+    /** war-only, always-blocked, or always-allowed. */
+    public String claimPvpMode() {
+        return cfg().getString("claim.protection.pvp.mode", "war-only");
+    }
+
+    public boolean claimPvpFriendlyFire() {
+        return cfg().getBoolean("claim.protection.pvp.friendly-fire", false);
     }
 
     public boolean placeholdersEnabled() {
