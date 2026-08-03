@@ -56,7 +56,9 @@ public final class EraRegistry {
                     requirements.add(requirement);
                 }
             }
-            eras.add(new Era(id, index, section.getString("display", id), requirements));
+            int baseLimit = section.getInt("base-chunk-limit", -1);
+            int chunksPerPlayer = section.getInt("additional-chunks-per-player", 0);
+            eras.add(new Era(id, index, section.getString("display", id), requirements, baseLimit, chunksPerPlayer));
             for (String name : section.getStringList("unlocks")) {
                 Material material = Material.matchMaterial(name);
                 if (material == null) {

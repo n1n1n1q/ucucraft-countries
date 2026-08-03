@@ -53,11 +53,12 @@ public final class CountriesPlugin extends JavaPlugin {
         vaults = new VaultManager(config, new VaultStorage(this));
         vaults.load();
 
-        claims = new ClaimManager(config, new ClaimStorage(this));
-        claims.load();
-
         EraRegistry registry = new EraRegistry(this, vaults);
         registry.load();
+
+        claims = new ClaimManager(config, new ClaimStorage(this), registry);
+        claims.load();
+
         EraManager eras = new EraManager(registry, countries, eraMessages);
 
         Services services = new Services(this, config, messages, eraMessages,

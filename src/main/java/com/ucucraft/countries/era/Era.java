@@ -10,12 +10,17 @@ public final class Era {
     private final int index;
     private final String display;
     private final List<Requirement> requirements;
+    private final int baseChunkLimit;
+    private final int additionalChunksPerPlayer;
 
-    public Era(String id, int index, String display, List<Requirement> requirements) {
+    public Era(String id, int index, String display, List<Requirement> requirements,
+               int baseChunkLimit, int additionalChunksPerPlayer) {
         this.id = id;
         this.index = index;
         this.display = display;
         this.requirements = requirements;
+        this.baseChunkLimit = baseChunkLimit;
+        this.additionalChunksPerPlayer = additionalChunksPerPlayer;
     }
 
     public String getId() {
@@ -32,5 +37,13 @@ public final class Era {
 
     public List<Requirement> getRequirements() {
         return requirements;
+    }
+
+    public int getBaseChunkLimit() {
+        return baseChunkLimit;
+    }
+
+    public int getAdditionalChunksPerPlayer() {
+        return additionalChunksPerPlayer;
     }
 }

@@ -10,6 +10,8 @@ import java.util.UUID;
 
 import com.ucucraft.countries.api.ChunkPos;
 import com.ucucraft.countries.config.PluginConfig;
+import com.ucucraft.countries.era.Era;
+import com.ucucraft.countries.era.EraRegistry;
 import com.ucucraft.countries.model.Country;
 
 public final class ClaimManager {
@@ -18,12 +20,14 @@ public final class ClaimManager {
 
     private final PluginConfig config;
     private final ClaimStorage storage;
+    private final EraRegistry eras;
     private final Map<ChunkPos, UUID> owners = new HashMap<>();
     private final Map<UUID, Set<ChunkPos>> byCountry = new LinkedHashMap<>();
 
-    public ClaimManager(PluginConfig config, ClaimStorage storage) {
+    public ClaimManager(PluginConfig config, ClaimStorage storage, EraRegistry eras) {
         this.config = config;
         this.storage = storage;
+        this.eras = eras;
     }
 
     public void load() {
@@ -59,11 +63,27 @@ public final class ClaimManager {
 
     /** Chunk allowance of the country; {@link Integer#MAX_VALUE} when unlimited. */
     public int limit(Country country) {
-        int base = config.claimBaseLimit();
+        Era era = eras.byIndex(country.getEraIndex());
+        int base;
+        int perPlayer;
+
+        if (era != null && era.getBaseChunkLimit() >= 0) {
+            base = era.getBaseChunkLimit();
+            perPlayer = era.getAdditionalChunksPerPlayer();
+        } else {
+            base = config.claimBaseLimit();
+            if (base <= 0) {
+                return Integer.MAX_VALUE;
+            }
+            perPlayer = config.claimPerEraBonus();
+        }
+
         if (base <= 0) {
             return Integer.MAX_VALUE;
         }
-        return base + config.claimPerEraBonus() * country.getEraIndex();
+
+        int playerBonus = perPlayer * country.getMembers().size();
+        return base + playerBonus;
     }
 
     public Result claim(Country country, ChunkPos pos) {

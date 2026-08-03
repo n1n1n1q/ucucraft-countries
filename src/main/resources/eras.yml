@@ -5,6 +5,10 @@
 # country reaches the era that lists it. Materials listed nowhere are ALWAYS allowed, so
 # only list what you actually want to gate.
 #
+# Chunk limits:
+#   base-chunk-limit            Base chunks allowed in this era (ignored if -1; uses config.yml fallback)
+#   additional-chunks-per-player Extra chunks per country member (multiplied by member count)
+#
 # Requirement types:
 #   resource    items: { MATERIAL: amount, ... }   (consumed on ascension)
 #   statistic   statistic: <Bukkit Statistic>, material/entity: <optional>, amount: N,
@@ -36,6 +40,8 @@ eras:
     display: "<gray>Stone Age</gray>"
     unlocks: []
     requirements: []
+    base-chunk-limit: 4
+    additional-chunks-per-player: 1
 
   - id: copper-age
     display: "<gold>Copper Age</gold>"
@@ -54,6 +60,8 @@ eras:
         material: STONE
         amount: 200
         scope: total
+    base-chunk-limit: 8
+    additional-chunks-per-player: 2
 
   - id: iron-age
     display: "<white>Iron Age</white>"
@@ -81,6 +89,8 @@ eras:
       - type: admin
         id: town-hall
         display: "Build a town hall"
+    base-chunk-limit: 12
+    additional-chunks-per-player: 2
 
   - id: gold-age
     display: "<yellow>Golden Age</yellow>"
@@ -102,6 +112,8 @@ eras:
         scope: total
       - type: time_in_era
         hours: 6
+    base-chunk-limit: 16
+    additional-chunks-per-player: 3
 
   - id: diamond-age
     display: "<aqua>Diamond Age</aqua>"
@@ -129,6 +141,8 @@ eras:
       - type: admin
         id: great-mine
         display: "Excavate a great mine"
+    base-chunk-limit: 20
+    additional-chunks-per-player: 3
 
   - id: netherite-age
     display: "<dark_red>Netherite Age</dark_red>"
@@ -160,3 +174,5 @@ eras:
       - type: admin
         id: grand-monument
         display: "Raise a grand monument"
+    base-chunk-limit: 24
+    additional-chunks-per-player: 4
