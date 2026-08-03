@@ -17,6 +17,7 @@ import com.ucucraft.countries.config.Messages;
 import com.ucucraft.countries.config.PluginConfig;
 import com.ucucraft.countries.era.EraGateListener;
 import com.ucucraft.countries.hook.CountryPlaceholders;
+import com.ucucraft.countries.hook.DynmapHook;
 import com.ucucraft.countries.era.EraManager;
 import com.ucucraft.countries.era.EraRegistry;
 import com.ucucraft.countries.manager.CountryManager;
@@ -35,6 +36,7 @@ public final class CountriesPlugin extends JavaPlugin {
     private VaultManager vaults;
     private ClaimManager claims;
     private CountryPlaceholders placeholders;
+    private DynmapHook dynmap;
 
     @Override
     public void onEnable() {
@@ -87,12 +89,26 @@ public final class CountriesPlugin extends JavaPlugin {
             invites.sweep();
             diplomacy.sweep();
         }, sweep, sweep);
+
+        if (config.dynmapEnabled()) {
+            DynmapHook hook = new DynmapHook(services);
+            if (hook.enable()) {
+                dynmap = hook;
+                long dynmapInterval = Math.max(5L, config.dynmapUpdateIntervalSeconds()) * 20L;
+                getServer().getScheduler().runTaskTimer(this, hook::update, 20L, dynmapInterval);
+            } else {
+                getLogger().info("Dynmap not found; skipping map integration.");
+            }
+        }
     }
 
     @Override
     public void onDisable() {
         if (placeholders != null) {
             placeholders.unregister();
+        }
+        if (dynmap != null) {
+            dynmap.disable();
         }
         getServer().getServicesManager().unregisterAll(this);
         if (countries != null) {

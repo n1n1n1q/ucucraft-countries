@@ -146,4 +146,37 @@ public final class PluginConfig {
     public String placeholderIdentifier() {
         return cfg().getString("placeholders.identifier", "country");
     }
+
+    public boolean dynmapEnabled() {
+        return cfg().getBoolean("dynmap.enabled", true);
+    }
+
+    public String dynmapMarkerSetId() {
+        return cfg().getString("dynmap.markerset-id", "countries.claims");
+    }
+
+    public String dynmapMarkerSetLabel() {
+        return cfg().getString("dynmap.markerset-label", "Countries");
+    }
+
+    public long dynmapUpdateIntervalSeconds() {
+        return cfg().getLong("dynmap.update-interval-seconds", 30);
+    }
+
+    /** Marker hover label; {country} is replaced with the country's name. */
+    public String dynmapLabelFormat() {
+        return cfg().getString("dynmap.label-format", "{country}");
+    }
+
+    public int dynmapLineWeight() {
+        return cfg().getInt("dynmap.style.line-weight", 2);
+    }
+
+    public double dynmapLineOpacity() {
+        return cfg().getDouble("dynmap.style.line-opacity", 0.8);
+    }
+
+    public double dynmapFillOpacity() {
+        return cfg().getDouble("dynmap.style.fill-opacity", 0.35);
+    }
 }

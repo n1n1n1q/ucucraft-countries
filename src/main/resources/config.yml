@@ -47,8 +47,8 @@ vault:
 claim:
   # Chunks a country may own before any era bonus. Set to 0 for unlimited.
   base-limit: 16
-  # Extra chunks granted for each era the country has advanced.
-  per-era-bonus: 4
+  # Extra chunks granted per country member (used when the current era defines no chunk limit of its own).
+  per-member-bonus: 4
   # If true, only the leader may claim/unclaim; otherwise leader and trusted members.
   leader-only: true
   # New claims must touch an existing claim of the same country (the first is free).
@@ -56,8 +56,47 @@ claim:
   # Worlds where claiming is not allowed.
   disabled-worlds: []
 
+  protection:
+    # Master switch for all land protection below.
+    enabled: true
+    # Block breaking/placing outside your own country's land.
+    build: true
+    # Opening containers and interacting with doors/buttons/levers/etc. outside your land.
+    containers: true
+    # Placing/collecting water or lava outside your land.
+    buckets: true
+    # Explosions (creeper, TNT, ...) damaging claimed land.
+    explosions: true
+    # Fire spreading onto or igniting claimed land.
+    fire: true
+    # Mobs (enderman, ravager, ...) changing blocks on claimed land.
+    mob-griefing: true
+    pvp:
+      # If false, PvP is never restricted by claims.
+      enabled: true
+      # war-only: only countries at war may fight on claimed land.
+      # always-blocked: no PvP at all on claimed land.
+      # always-allowed: claims never restrict PvP.
+      mode: war-only
+      # Allow members of the same country to fight each other on their own land.
+      friendly-fire: false
+
 placeholders:
   # Register the PlaceholderAPI expansion when PlaceholderAPI is installed.
   enabled: true
   # Placeholder namespace: "country" yields %country%, %country_leader%, ...
   identifier: country
+
+dynmap:
+  # Show country claims on the Dynmap web map when the Dynmap plugin is installed.
+  enabled: true
+  markerset-id: "countries.claims"
+  markerset-label: "Countries"
+  # How often the map is redrawn from current claim data, in seconds.
+  update-interval-seconds: 30
+  # Marker hover label. {country} is replaced with the country's name.
+  label-format: "{country}"
+  style:
+    line-weight: 2
+    line-opacity: 0.8
+    fill-opacity: 0.35
