@@ -29,7 +29,7 @@ public final class CreateSub implements SubCommand {
             services.messages.send(player, "already-in-country");
             return;
         }
-        String name = args[0];
+        String name = Names.join(args, 0);
         NameStatus status = services.countries.checkName(name);
         if (!Names.report(services, player, status, name)) {
             return;

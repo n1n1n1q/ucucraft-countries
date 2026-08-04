@@ -25,9 +25,10 @@ public final class InfoSub implements SubCommand {
     public void execute(Player player, String[] args) {
         Country country;
         if (args.length >= 1) {
-            country = services.countries.getByName(args[0]);
+            String name = Names.join(args, 0);
+            country = services.countries.getByName(name);
             if (country == null) {
-                services.messages.send(player, "country-not-found", "country", args[0]);
+                services.messages.send(player, "country-not-found", "country", name);
                 return;
             }
         } else {

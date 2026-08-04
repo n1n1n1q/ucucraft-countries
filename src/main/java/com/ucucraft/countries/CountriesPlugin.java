@@ -24,6 +24,9 @@ import com.ucucraft.countries.manager.CountryManager;
 import com.ucucraft.countries.manager.DiplomacyManager;
 import com.ucucraft.countries.manager.InviteManager;
 import com.ucucraft.countries.storage.CountryStorage;
+import com.ucucraft.countries.title.CountryAreaProvider;
+import com.ucucraft.titles.TitlesProvider;
+import com.ucucraft.titles.location.LocationTitleService;
 import com.ucucraft.countries.vault.VaultListener;
 import com.ucucraft.countries.vault.VaultManager;
 import com.ucucraft.countries.vault.VaultStorage;
@@ -37,10 +40,16 @@ public final class CountriesPlugin extends JavaPlugin {
     private ClaimManager claims;
     private CountryPlaceholders placeholders;
     private DynmapHook dynmap;
+    private LocationTitleService locations;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        // Add keys introduced by newer versions to an existing config.yml. copyDefaults only
+        // materialises them on save, so read the merged file back before anything uses it.
+        getConfig().options().copyDefaults(true);
+        saveConfig();
+        reloadConfig();
 
         PluginConfig config = new PluginConfig(this);
         Messages messages = new Messages(this);
@@ -80,6 +89,14 @@ public final class CountriesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EraGateListener(services), this);
         getServer().getPluginManager().registerEvents(new ClaimProtectionListener(services), this);
 
+        locations = getServer().getPluginManager().isPluginEnabled("Titles")
+                ? TitlesProvider.locations() : null;
+        if (locations != null) {
+            locations.register(this, new CountryAreaProvider(services));
+        } else {
+            getLogger().info("Titles plugin not found; location titles are disabled.");
+        }
+
         bind("country", new CountryCommand(services, vaultListener));
         bind("accept", new AcceptCommand(services));
         bind("countryadmin", new AdminCommand(services));
@@ -109,6 +126,9 @@ public final class CountriesPlugin extends JavaPlugin {
         }
         if (dynmap != null) {
             dynmap.disable();
+        }
+        if (locations != null) {
+            locations.unregister(this);
         }
         getServer().getServicesManager().unregisterAll(this);
         if (countries != null) {

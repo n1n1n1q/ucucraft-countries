@@ -35,7 +35,7 @@ public final class RenameSub implements SubCommand {
             services.messages.send(player, "not-leader");
             return;
         }
-        String name = args[0];
+        String name = Names.join(args, 0);
         NameStatus status = services.countries.checkName(name);
         if (!Names.report(services, player, status, name)) {
             return;

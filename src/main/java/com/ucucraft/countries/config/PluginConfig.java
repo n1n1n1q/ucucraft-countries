@@ -1,7 +1,9 @@
 package com.ucucraft.countries.config;
 
 import java.util.List;
+import java.util.Set;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -44,11 +46,11 @@ public final class PluginConfig {
     }
 
     public int nameMaxLength() {
-        return cfg().getInt("country.name-max-length", 16);
+        return cfg().getInt("country.name-max-length", 24);
     }
 
     public String namePattern() {
-        return cfg().getString("country.name-pattern", "^[A-Za-z0-9_]+$");
+        return cfg().getString("country.name-pattern", "^[A-Za-z0-9_ ]+$");
     }
 
     public boolean inviteLeaderOnly() {
@@ -136,6 +138,64 @@ public final class PluginConfig {
 
     public boolean claimPvpFriendlyFire() {
         return cfg().getBoolean("claim.protection.pvp.friendly-fire", false);
+    }
+
+    /** Hand claimed land to the Titles plugin so it can show location titles. */
+    public boolean titlesEnabled() {
+        return cfg().getBoolean("titles.enabled", true);
+    }
+
+    /** Style section the Titles plugin renders claimed land with. */
+    public String titleStyle() {
+        return cfg().getString("titles.style", "country");
+    }
+
+    public int titlePriority() {
+        return cfg().getInt("titles.priority", 0);
+    }
+
+    /** Show a title when leaving claimed land for unclaimed land. */
+    public boolean titlesWilderness() {
+        return cfg().getBoolean("titles.wilderness.enabled", true);
+    }
+
+    public String titleWildernessStyle() {
+        return cfg().getString("titles.wilderness.style", "wilderness");
+    }
+
+    public int titleWildernessPriority() {
+        return cfg().getInt("titles.wilderness.priority", -100);
+    }
+
+    /** Sound played on entering that country's land; empty when it has none. */
+    public String titleSound(String country) {
+        String own = cfg().getString("titles.sounds.by-country." + country);
+        if (own == null) {
+            for (String key : soundKeys()) {
+                if (key.equalsIgnoreCase(country)) {
+                    own = cfg().getString("titles.sounds.by-country." + key);
+                    break;
+                }
+            }
+        }
+        return own != null ? own : cfg().getString("titles.sounds.default", "");
+    }
+
+    public String titleWildernessSound() {
+        return cfg().getString("titles.wilderness.sound", "");
+    }
+
+    public float titleSoundVolume() {
+        return (float) cfg().getDouble("titles.sounds.volume", 1.0);
+    }
+
+    public float titleSoundPitch() {
+        return (float) cfg().getDouble("titles.sounds.pitch", 1.0);
+    }
+
+    private Set<String> soundKeys() {
+        ConfigurationSection section = cfg().getConfigurationSection("titles.sounds.by-country");
+        return section != null ? section.getKeys(false) : Set.of();
     }
 
     public boolean placeholdersEnabled() {

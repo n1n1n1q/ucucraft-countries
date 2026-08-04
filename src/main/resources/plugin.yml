@@ -4,7 +4,7 @@ main: com.ucucraft.countries.CountriesPlugin
 api-version: '26.2'
 author: ucucraft
 description: Create and manage countries.
-softdepend: [PlaceholderAPI, dynmap]
+softdepend: [PlaceholderAPI, dynmap, Titles]
 commands:
   country:
     description: Manage countries.
