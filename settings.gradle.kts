@@ -3,3 +3,5 @@ plugins {
 }
 
 rootProject.name = "countries"
+
+includeBuild("../ucucraft-titles")
