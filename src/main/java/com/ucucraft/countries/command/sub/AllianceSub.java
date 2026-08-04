@@ -55,7 +55,7 @@ public final class AllianceSub implements SubCommand {
         if (own == null) {
             return;
         }
-        Country target = Diplo.target(services, player, args[1]);
+        Country target = Diplo.target(services, player, Names.join(args, 1));
         if (target == null) {
             return;
         }
@@ -90,7 +90,7 @@ public final class AllianceSub implements SubCommand {
         if (own == null) {
             return;
         }
-        Country target = Diplo.target(services, player, args[1]);
+        Country target = Diplo.target(services, player, Names.join(args, 1));
         if (target == null) {
             return;
         }
@@ -116,7 +116,7 @@ public final class AllianceSub implements SubCommand {
         if (own == null) {
             return;
         }
-        Country target = Diplo.target(services, player, args[1]);
+        Country target = Diplo.target(services, player, Names.join(args, 1));
         if (target == null) {
             return;
         }

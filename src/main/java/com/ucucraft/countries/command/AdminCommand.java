@@ -63,11 +63,11 @@ public final class AdminCommand implements TabExecutor {
             services.eraMessages.send(sender, "admin-usage");
             return;
         }
-        Country target = country(sender, args[1]);
+        Country target = country(sender, NameArgs.join(args, 1, args.length - 1));
         if (target == null) {
             return;
         }
-        String id = args[2];
+        String id = args[args.length - 1];
         if (complete) {
             if (!hasCriteria(target, id)) {
                 services.eraMessages.send(sender, "admin-criteria-not-found", "criteria", id);
@@ -113,13 +113,14 @@ public final class AdminCommand implements TabExecutor {
             services.eraMessages.send(sender, "admin-usage");
             return;
         }
-        Country target = country(sender, args[1]);
+        Country target = country(sender, NameArgs.join(args, 1, args.length - 1));
         if (target == null) {
             return;
         }
-        Era era = services.eras.registry().byId(args[2]);
+        String eraId = args[args.length - 1];
+        Era era = services.eras.registry().byId(eraId);
         if (era == null) {
-            services.eraMessages.send(sender, "admin-era-not-found", "era", args[2]);
+            services.eraMessages.send(sender, "admin-era-not-found", "era", eraId);
             return;
         }
         target.setEraIndex(era.getIndex());

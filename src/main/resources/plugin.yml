@@ -4,7 +4,7 @@ main: com.ucucraft.countries.CountriesPlugin
 api-version: '26.2'
 author: ucucraft
 description: Create and manage countries.
-softdepend: [PlaceholderAPI]
+softdepend: [PlaceholderAPI, dynmap, Titles]
 commands:
   country:
     description: Manage countries.
@@ -28,6 +28,7 @@ permissions:
       countries.admin.criteria: true
       countries.admin.setera: true
       countries.admin.reload: true
+      countries.admin.bypassclaim: true
   countries.admin.criteria:
     description: Complete or revoke admin era criteria.
     default: op
@@ -36,4 +37,7 @@ permissions:
     default: op
   countries.admin.reload:
     description: Reload era and language files.
+    default: op
+  countries.admin.bypassclaim:
+    description: Bypass land claim protection.
     default: op

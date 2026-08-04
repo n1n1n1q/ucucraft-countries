@@ -32,7 +32,7 @@ public final class WarSub implements SubCommand {
         if (own == null) {
             return;
         }
-        Country target = Diplo.target(services, player, args[0]);
+        Country target = Diplo.target(services, player, Names.join(args, 0));
         if (target == null) {
             return;
         }

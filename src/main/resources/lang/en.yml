@@ -108,6 +108,16 @@ claim-failed: "<red>That chunk could not be claimed."
 unclaim-success: "<green>Released chunk <yellow>{x}, {z}</yellow> in <yellow>{world}</yellow>. <gray>({used}/{limit})"
 unclaim-wilderness: "<red>This chunk is not claimed."
 unclaim-not-owner: "<red>This chunk belongs to <yellow>{country}</yellow>."
+claim-protected: "<red>This land belongs to <yellow>{country}</yellow>."
+claim-protected-pvp: "<red>You cannot fight here; this land belongs to <yellow>{country}</yellow>."
+
+# --- Location titles ---
+# Shown across the screen on entering territory. Styling lives in config.yml (titles:).
+# Colours come from the animation, so plain text works best here.
+title-country: "{country}"
+subtitle-country: "Sovereign land"
+title-wilderness: "Wilderness"
+subtitle-wilderness: "Unclaimed"
 
 # --- PlaceholderAPI ---
 placeholder-no-country: "None"

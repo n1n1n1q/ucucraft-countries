@@ -28,9 +28,9 @@ announce:
 
 country:
   name-min-length: 3
-  name-max-length: 16
-  # Allowed characters for country names.
-  name-pattern: "^[A-Za-z0-9_]+$"
+  name-max-length: 24
+  # Allowed characters for country names. Space is included so names can be multiple words.
+  name-pattern: "^[A-Za-z0-9_ ]+$"
   # If true, only the leader may invite new members.
   invite-leader-only: true
 
@@ -47,8 +47,8 @@ vault:
 claim:
   # Chunks a country may own before any era bonus. Set to 0 for unlimited.
   base-limit: 16
-  # Extra chunks granted for each era the country has advanced.
-  per-era-bonus: 4
+  # Extra chunks granted per country member (used when the current era defines no chunk limit of its own).
+  per-member-bonus: 4
   # If true, only the leader may claim/unclaim; otherwise leader and trusted members.
   leader-only: true
   # New claims must touch an existing claim of the same country (the first is free).
@@ -56,8 +56,80 @@ claim:
   # Worlds where claiming is not allowed.
   disabled-worlds: []
 
+  protection:
+    # Master switch for all land protection below.
+    enabled: true
+    # Block breaking/placing outside your own country's land.
+    build: true
+    # Opening containers and interacting with doors/buttons/levers/etc. outside your land.
+    containers: true
+    # Placing/collecting water or lava outside your land.
+    buckets: true
+    # Explosions (creeper, TNT, ...) damaging claimed land.
+    explosions: true
+    # Fire spreading onto or igniting claimed land.
+    fire: true
+    # Mobs (enderman, ravager, ...) changing blocks on claimed land.
+    mob-griefing: true
+    pvp:
+      # If false, PvP is never restricted by claims.
+      enabled: true
+      # war-only: only countries at war may fight on claimed land.
+      # always-blocked: no PvP at all on claimed land.
+      # always-allowed: claims never restrict PvP.
+      mode: war-only
+      # Allow members of the same country to fight each other on their own land.
+      friendly-fire: false
+
+# Land titles shown across the screen on entering territory. Requires the Titles plugin,
+# which owns the animations, timings and repeat cooldown (its own config.yml).
+# The texts live in the language file (title-country, subtitle-country, ...).
+titles:
+  enabled: true
+  # Style section the Titles plugin renders claimed land with.
+  style: country
+  # Beats any other plugin's area with a lower priority on the same spot.
+  priority: 0
+
+  # Sound played when a player walks into a country's land. Countries have none by default.
+  # Values are sound event keys, not files: vanilla ones work as-is
+  # (e.g. "minecraft:block.beacon.activate"), custom ones need a resource pack that
+  # defines them (e.g. "ucucraft:area.new_area2"). The Titles plugin cuts the sound off
+  # when the title leaves the screen.
+  sounds:
+    # Played for countries with no entry of their own. Empty means silent.
+    default: ""
+    volume: 1.0
+    pitch: 1.0
+    # Country name -> sound key. Names are matched ignoring case.
+    by-country: {}
+    #  Mali Nalisniki: "ucucraft:area.new_area2"
+
+  wilderness:
+    # Set to false to stay silent when leaving claimed land.
+    enabled: true
+    style: wilderness
+    # Negative, so a named place from another plugin wins over open land.
+    priority: -100
+    # Sound key for unclaimed land; empty means silent.
+    sound: ""
+
 placeholders:
   # Register the PlaceholderAPI expansion when PlaceholderAPI is installed.
   enabled: true
   # Placeholder namespace: "country" yields %country%, %country_leader%, ...
   identifier: country
+
+dynmap:
+  # Show country claims on the Dynmap web map when the Dynmap plugin is installed.
+  enabled: true
+  markerset-id: "countries.claims"
+  markerset-label: "Countries"
+  # How often the map is redrawn from current claim data, in seconds.
+  update-interval-seconds: 30
+  # Marker hover label. {country} is replaced with the country's name.
+  label-format: "{country}"
+  style:
+    line-weight: 2
+    line-opacity: 0.8
+    fill-opacity: 0.35

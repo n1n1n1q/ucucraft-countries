@@ -3,11 +3,17 @@ package com.ucucraft.countries.command.sub;
 import org.bukkit.entity.Player;
 
 import com.ucucraft.countries.Services;
+import com.ucucraft.countries.command.NameArgs;
 import com.ucucraft.countries.manager.CountryManager.NameStatus;
 
 final class Names {
 
     private Names() {
+    }
+
+    /** Joins args[from..) into a single whitespace-normalized name. */
+    static String join(String[] args, int from) {
+        return NameArgs.join(args, from);
     }
 
     /** Sends the matching error message and returns false when the name is not usable. */
