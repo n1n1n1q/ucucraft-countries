@@ -14,11 +14,17 @@ repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.extendedclip.com/releases/")
+    maven("https://repo.mikeprimm.com/")
 }
+
+val titlesPlugin: Configuration by configurations.creating
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.2.build.87-stable")
     compileOnly("me.clip:placeholderapi:2.11.6")
+    compileOnly("us.dynmap:dynmap-api:3.4-beta-3@jar")
+    compileOnly("com.ucucraft:ucucraft-titles:1.0.0")
+    titlesPlugin("com.ucucraft:ucucraft-titles:1.0.0")
 }
 
 tasks {
@@ -32,5 +38,6 @@ tasks {
 
     runServer {
         minecraftVersion("26.2")
+        pluginJars.from(titlesPlugin)
     }
 }
