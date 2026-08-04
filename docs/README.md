@@ -36,6 +36,27 @@ first claim can go anywhere and every later one must touch existing land.
 Claims are tracked and exposed through the API; this plugin does not itself block
 building on foreign land — use `CountriesAPI#canBuild` from your protection plugin.
 
+### Location titles
+
+Entering another country's land shows its name across the screen, in the style of
+Elden Ring / Hollow Knight area titles. The same happens on login for the land the
+player is standing on (`titles.show-on-join`).
+
+Requires the separate `Titles` plugin (`../ucucraft-titles`) in the server's `plugins/`
+folder. Without it the rest of the plugin works and titles are skipped, with a note in
+the startup log.
+
+Titles is a general location-title plugin: this plugin only tells it that a chunk belongs
+to a country, and Titles handles movement detection, the repeat cooldown (default 120s, so
+pacing across a border does not spam) and the animation. Leaving claimed land shows the
+wilderness title; disable it with `titles.wilderness.enabled: false`.
+
+Texts live in `lang/<language>.yml` (`title-country`, `subtitle-country`,
+`title-wilderness`, `subtitle-wilderness`). `config.yml` picks which style Titles renders
+them with (`titles.style`, default `country`) and the priority used when another plugin
+names the same spot. Animations, timings and the cooldown live in `plugins/Titles/config.yml`
+— see `../ucucraft-titles/README.md`.
+
 ## PlaceholderAPI
 
 Installed automatically when PlaceholderAPI is present. The namespace is
@@ -87,13 +108,17 @@ Every `CountryView` collection is unmodifiable — the API is read-only.
 ## Building
 
 Requires JDK 25 (the Gradle toolchain auto-provisions it if it isn't already installed).
+`../ucucraft-titles` is a composite build, so that folder must sit next to this one; it
+produces its own `Titles` plugin jar, which `./gradlew build` builds alongside this one and
+`./gradlew runServer` installs into the test server automatically.
 
 ```
 ./gradlew build
 ```
 
 The jar is produced at `build/libs/countries-<version>.jar`. Drop it into a
-Paper server's `plugins/` folder.
+Paper server's `plugins/` folder, together with
+`../ucucraft-titles/build/libs/ucucraft-titles-<version>.jar` if you want location titles.
 
 ### Note: non-ASCII project path
 
