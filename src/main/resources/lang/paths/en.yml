@@ -1,0 +1,46 @@
+
+# --- paths ---
+path-disabled: "<red>Paths are disabled on this server."
+path-none-defined: "<red>No paths are defined."
+path-no-country: "<red>You need a country to walk a path."
+path-not-leader: "<red>Only the country leader can choose the path."
+path-unknown: "<red>No path named <yellow>{path}</yellow>. Use <yellow>/country path list</yellow>."
+path-already-chosen: "<red>Your country already walks <white>{path}</white>, and the choice is final."
+path-chosen: "<green>Your country now walks {path}<green>."
+path-announce-chosen: "<yellow>{country}</yellow> <gray>has chosen</gray> {path}<gray>."
+path-choose-hint: "<gray>Pick your country's path with <yellow>/path choose <path></yellow>."
+
+path-current: "<gray>Path: <white>{path}"
+path-current-none: "<gray>Path: <white>none</white> <gray>- pick one with <yellow>/path choose <path></yellow>."
+path-tier-unlocked: "<green>[x]</green> {tier} <gray>({era})"
+path-tier-locked: "<red>[ ]</red> {tier} <gray>(unlocks in {era})"
+path-tier-line: "  <gray>{text}"
+path-next-unlock: "<gray>Next tier: {tier} <gray>in <white>{era}</white>."
+path-no-more-tiers: "<gray>Every tier of this path is unlocked."
+
+path-list-header: "<gray>--- <light_purple>Paths</light_purple> ---"
+path-list-entry: "<gray>- <yellow>{id}</yellow> {path}"
+path-list-current: "<gray>- <yellow>{id}</yellow> {path} <green><- yours"
+path-list-line: "  <gray>{text}"
+path-list-footer: "<gray>Details: <yellow>/path info <path></yellow>. Choose with <yellow>/path choose <path></yellow>."
+path-info-header: "<gray>--- {path} <gray>---"
+
+path-buff-unlocked: "<green>{path} <green>unlocked <white>{tier}</white>!"
+path-abilities-header: "<gray>Abilities:"
+path-ability-ready: "<gray>- {ability} <green>ready</green> <gray>(<yellow>/path use {id}</yellow>)"
+path-ability-cooling: "<gray>- {ability} <red>{time}</red>"
+
+ability-none: "<red>Your path has no abilities yet."
+ability-unknown: "<red>No ability named <yellow>{ability}</yellow>."
+ability-cooldown: "<red>{ability} <red>is not ready for another <white>{time}</white>."
+ability-unavailable: "<red>{ability} <red>cannot be used right now."
+ability-used: "<green>You unleashed {ability}<green> on <white>{targets}</white> citizen(s)."
+ability-received: "<green><yellow>{player}</yellow> unleashed {ability}<green>."
+ability-broadcast: "<yellow>{country}</yellow> <gray>unleashed</gray> {ability}<gray>!"
+
+usage-path: "<yellow>Usage: /path [list|info <path>|choose <path>|use <ability>] <gray>(or /country path ...)"
+
+# --- admin ---
+admin-path-set: "<green><yellow>{country}</yellow> now walks {path}<green>."
+admin-path-cleared: "<green><yellow>{country}</yellow> no longer walks a path."
+admin-path-not-found: "<red>No path with id <yellow>{path}</yellow>."

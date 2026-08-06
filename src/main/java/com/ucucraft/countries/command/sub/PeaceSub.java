@@ -5,6 +5,7 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 import com.ucucraft.countries.Services;
+import com.ucucraft.countries.command.NameArgs;
 import com.ucucraft.countries.command.SubCommand;
 import com.ucucraft.countries.manager.DiplomacyManager.Kind;
 import com.ucucraft.countries.model.Country;
@@ -68,12 +69,10 @@ public final class PeaceSub implements SubCommand {
 
     @Override
     public List<String> complete(Player player, String[] args) {
-        if (args.length == 1) {
-            Country own = services.countries.getByPlayer(player.getUniqueId());
-            if (own != null) {
-                return Diplo.countryNames(services, own.getWars());
-            }
+        Country own = services.countries.getByPlayer(player.getUniqueId());
+        if (own == null) {
+            return List.of();
         }
-        return List.of();
+        return NameArgs.completeName(Diplo.countryNames(services, own.getWars()), args, 0);
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 import com.ucucraft.countries.Services;
+import com.ucucraft.countries.command.NameArgs;
 import com.ucucraft.countries.command.SubCommand;
 import com.ucucraft.countries.manager.DiplomacyManager.Kind;
 import com.ucucraft.countries.manager.DiplomacyManager.Offer;
@@ -137,17 +138,15 @@ public final class AllianceSub implements SubCommand {
         if (args.length == 1) {
             return Diplo.filter(List.of("invite", "accept", "disband", "list"), args[0]);
         }
-        if (args.length == 2) {
-            Country own = services.countries.getByPlayer(player.getUniqueId());
-            if (own == null) {
-                return List.of();
-            }
-            return switch (args[0].toLowerCase()) {
-                case "invite" -> Diplo.otherCountryNames(services, own);
-                case "disband" -> Diplo.countryNames(services, own.getAllies());
-                default -> List.of();
-            };
+        Country own = services.countries.getByPlayer(player.getUniqueId());
+        if (own == null) {
+            return List.of();
         }
-        return List.of();
+        List<String> names = switch (args[0].toLowerCase()) {
+            case "invite", "accept" -> Diplo.otherCountryNames(services, own);
+            case "disband" -> Diplo.countryNames(services, own.getAllies());
+            default -> List.of();
+        };
+        return NameArgs.completeName(names, args, 1);
     }
 }

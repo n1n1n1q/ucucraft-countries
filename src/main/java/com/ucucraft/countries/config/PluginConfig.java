@@ -33,6 +33,11 @@ public final class PluginConfig {
         return cfg().getString("prefix.eras", prefix());
     }
 
+    /** Prefix for path messages; falls back to {@link #prefix()}. */
+    public String pathPrefix() {
+        return cfg().getString("prefix.paths", prefix());
+    }
+
     public long inviteDurationSeconds() {
         return cfg().getLong("invite.duration-seconds", 60);
     }

@@ -13,6 +13,7 @@ import com.ucucraft.countries.era.Era;
 import com.ucucraft.countries.era.requirement.AdminRequirement;
 import com.ucucraft.countries.era.requirement.Requirement;
 import com.ucucraft.countries.model.Country;
+import com.ucucraft.countries.path.Path;
 
 public final class AdminCommand implements TabExecutor {
 
@@ -33,6 +34,7 @@ public final class AdminCommand implements TabExecutor {
             case "complete" -> criteria(sender, args, true);
             case "revoke" -> criteria(sender, args, false);
             case "setera" -> setEra(sender, args);
+            case "setpath" -> setPath(sender, args);
             case "reload" -> reload(sender);
             default -> services.eraMessages.send(sender, "admin-usage");
         }
@@ -130,14 +132,44 @@ public final class AdminCommand implements TabExecutor {
                 "country", target.getName(), "era", era.getDisplay());
     }
 
+    private void setPath(CommandSender sender, String[] args) {
+        if (denied(sender, "countries.admin.setpath")) {
+            return;
+        }
+        if (args.length < 3) {
+            services.eraMessages.send(sender, "admin-usage");
+            return;
+        }
+        Country target = country(sender, NameArgs.join(args, 1, args.length - 1));
+        if (target == null) {
+            return;
+        }
+        String pathId = args[args.length - 1];
+        if ("none".equalsIgnoreCase(pathId)) {
+            services.paths.set(target, null);
+            services.pathMessages.send(sender, "admin-path-cleared", "country", target.getName());
+            return;
+        }
+        Path path = services.paths.registry().byId(pathId);
+        if (path == null) {
+            services.pathMessages.send(sender, "admin-path-not-found", "path", pathId);
+            return;
+        }
+        services.paths.set(target, path.getId());
+        services.pathMessages.send(sender, "admin-path-set",
+                "country", target.getName(), "path", path.getDisplay());
+    }
+
     private void reload(CommandSender sender) {
         if (denied(sender, "countries.admin.reload")) {
             return;
         }
         services.plugin.reloadConfig();
         services.eras.registry().load();
+        services.paths.registry().load(services.eras.registry());
         services.messages.load(services.config.language(), services.config.prefix());
         services.eraMessages.load(services.config.language(), services.config.eraPrefix());
+        services.pathMessages.load(services.config.language(), services.config.pathPrefix());
         services.eraMessages.send(sender, "admin-reloaded");
     }
 
@@ -145,35 +177,49 @@ public final class AdminCommand implements TabExecutor {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
                                       @NotNull String label, @NotNull String[] args) {
         if (args.length == 1) {
-            return List.of("complete", "revoke", "setera", "reload");
+            return List.of("complete", "revoke", "setera", "setpath", "reload");
         }
-        if (args.length == 2 && !"reload".equalsIgnoreCase(args[0])) {
-            List<String> names = new ArrayList<>();
-            for (Country country : services.countries.allSorted()) {
-                names.add(country.getName());
-            }
-            return names;
+        if (args.length < 2 || "reload".equalsIgnoreCase(args[0])) {
+            return List.of();
         }
-        if (args.length == 3) {
-            Country target = services.countries.getByName(args[1]);
-            if (target == null) {
-                return List.of();
+        // The country name may span several arguments, so offer both the next word of a name
+        // and the value list once the words before the last one already name a country.
+        List<String> names = new ArrayList<>();
+        for (Country country : services.countries.allSorted()) {
+            names.add(country.getName());
+        }
+        List<String> suggestions = new ArrayList<>(NameArgs.completeName(names, args, 1));
+        Country target = services.countries.getByName(NameArgs.join(args, 1, args.length - 1));
+        if (target != null) {
+            for (String value : values(args[0], target)) {
+                if (value.toLowerCase().startsWith(args[args.length - 1].toLowerCase())) {
+                    suggestions.add(value);
+                }
             }
-            if ("setera".equalsIgnoreCase(args[0])) {
-                List<String> ids = new ArrayList<>();
+        }
+        return suggestions;
+    }
+
+    private List<String> values(String action, Country target) {
+        List<String> ids = new ArrayList<>();
+        switch (action.toLowerCase()) {
+            case "setera" -> {
                 for (Era era : services.eras.registry().all()) {
                     ids.add(era.getId());
                 }
-                return ids;
             }
-            if ("complete".equalsIgnoreCase(args[0])) {
-                return criteriaIds(target);
+            case "setpath" -> {
+                ids.add("none");
+                for (Path path : services.paths.registry().all()) {
+                    ids.add(path.getId());
+                }
             }
-            if ("revoke".equalsIgnoreCase(args[0])) {
-                return new ArrayList<>(target.getCompletedCriteria());
+            case "complete" -> ids.addAll(criteriaIds(target));
+            case "revoke" -> ids.addAll(target.getCompletedCriteria());
+            default -> {
             }
         }
-        return List.of();
+        return ids;
     }
 
     private List<String> criteriaIds(Country country) {

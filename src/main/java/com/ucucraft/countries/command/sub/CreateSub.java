@@ -40,5 +40,8 @@ public final class CreateSub implements SubCommand {
         } else {
             services.messages.send(player, "created", "country", name);
         }
+        if (services.paths.enabled()) {
+            services.pathMessages.send(player, "path-choose-hint");
+        }
     }
 }

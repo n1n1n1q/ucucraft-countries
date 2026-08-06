@@ -11,17 +11,24 @@ import com.ucucraft.countries.era.requirement.AdminRequirement;
 import com.ucucraft.countries.era.requirement.Requirement;
 import com.ucucraft.countries.manager.CountryManager;
 import com.ucucraft.countries.model.Country;
+import com.ucucraft.countries.path.PathManager;
 
 public final class EraManager {
 
     private final EraRegistry registry;
     private final CountryManager countries;
     private final Messages lang;
+    private PathManager paths;
 
     public EraManager(EraRegistry registry, CountryManager countries, Messages lang) {
         this.registry = registry;
         this.countries = countries;
         this.lang = lang;
+    }
+
+    /** Set once at startup; ascension then reports the path tier the new era unlocks. */
+    public void setPaths(PathManager paths) {
+        this.paths = paths;
     }
 
     public EraRegistry registry() {
@@ -124,6 +131,9 @@ public final class EraManager {
         if (broadcastEnabled()) {
             lang.broadcast("era-ascended-broadcast",
                     "country", country.getName(), "era", next.getDisplay());
+        }
+        if (paths != null) {
+            paths.announceUnlock(country);
         }
         return true;
     }

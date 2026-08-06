@@ -9,15 +9,18 @@ import org.bukkit.Statistic;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 
+import com.ucucraft.countries.path.PathRegistry;
 import com.ucucraft.countries.vault.VaultManager;
 
 public final class RequirementFactory {
 
     private final VaultManager vaults;
+    private final PathRegistry paths;
     private final Logger logger;
 
-    public RequirementFactory(VaultManager vaults, Logger logger) {
+    public RequirementFactory(VaultManager vaults, PathRegistry paths, Logger logger) {
         this.vaults = vaults;
+        this.paths = paths;
         this.logger = logger;
     }
 
@@ -55,7 +58,7 @@ public final class RequirementFactory {
             }
             map.put(material, items.getInt(key));
         }
-        return map.isEmpty() ? null : new ResourceRequirement(vaults, map);
+        return map.isEmpty() ? null : new ResourceRequirement(vaults, paths, map);
     }
 
     private Requirement admin(ConfigurationSection section) {

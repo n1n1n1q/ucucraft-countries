@@ -5,6 +5,7 @@ language: en
 prefix:
   default: "<gray>[<aqua>Countries</aqua>]</gray> "
   eras: "<gray>[<gold>Eras</gold>]</gray> "
+  paths: "<gray>[<light_purple>Paths</light_purple>]</gray> "
 
 invite:
   # How long a pending invite stays valid, in seconds.

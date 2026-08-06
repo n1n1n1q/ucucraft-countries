@@ -9,6 +9,7 @@ import com.ucucraft.countries.era.EraManager;
 import com.ucucraft.countries.manager.CountryManager;
 import com.ucucraft.countries.manager.DiplomacyManager;
 import com.ucucraft.countries.manager.InviteManager;
+import com.ucucraft.countries.path.PathManager;
 import com.ucucraft.countries.vault.VaultManager;
 
 public final class Services {
@@ -17,24 +18,29 @@ public final class Services {
     public final PluginConfig config;
     public final Messages messages;
     public final Messages eraMessages;
+    public final Messages pathMessages;
     public final CountryManager countries;
     public final InviteManager invites;
     public final DiplomacyManager diplomacy;
     public final EraManager eras;
+    public final PathManager paths;
     public final VaultManager vaults;
     public final ClaimManager claims;
 
     public Services(Plugin plugin, PluginConfig config, Messages messages, Messages eraMessages,
-                    CountryManager countries, InviteManager invites, DiplomacyManager diplomacy,
-                    EraManager eras, VaultManager vaults, ClaimManager claims) {
+                    Messages pathMessages, CountryManager countries, InviteManager invites,
+                    DiplomacyManager diplomacy, EraManager eras, PathManager paths,
+                    VaultManager vaults, ClaimManager claims) {
         this.plugin = plugin;
         this.config = config;
         this.messages = messages;
         this.eraMessages = eraMessages;
+        this.pathMessages = pathMessages;
         this.countries = countries;
         this.invites = invites;
         this.diplomacy = diplomacy;
         this.eras = eras;
+        this.paths = paths;
         this.vaults = vaults;
         this.claims = claims;
     }

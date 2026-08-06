@@ -23,6 +23,7 @@ import com.ucucraft.countries.command.sub.InfoSub;
 import com.ucucraft.countries.command.sub.InviteSub;
 import com.ucucraft.countries.command.sub.LeaveSub;
 import com.ucucraft.countries.command.sub.ListSub;
+import com.ucucraft.countries.command.sub.PathSub;
 import com.ucucraft.countries.command.sub.PeaceSub;
 import com.ucucraft.countries.command.sub.RenameSub;
 import com.ucucraft.countries.command.sub.UnclaimSub;
@@ -46,6 +47,7 @@ public final class CountryCommand implements TabExecutor {
         register(new InfoSub(services));
         register(new ListSub(services));
         register(new EraSub(services));
+        register(new PathSub(services));
         register(new ClaimSub(services));
         register(new UnclaimSub(services));
         register(new VaultSub(services, vaultGui));
@@ -104,7 +106,7 @@ public final class CountryCommand implements TabExecutor {
     private void sendHelp(Player player) {
         services.messages.sendRaw(player, "help-header");
         for (String key : new String[]{"create", "invite", "accept", "leave",
-                "disband", "rename", "info", "list", "era", "claim", "unclaim",
+                "disband", "rename", "info", "list", "era", "path", "claim", "unclaim",
                 "vault", "ally", "war", "peace"}) {
             services.messages.sendRaw(player, "help-" + key);
         }

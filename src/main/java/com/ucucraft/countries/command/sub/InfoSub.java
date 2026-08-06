@@ -5,8 +5,10 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 import com.ucucraft.countries.Services;
+import com.ucucraft.countries.command.NameArgs;
 import com.ucucraft.countries.command.SubCommand;
 import com.ucucraft.countries.model.Country;
+import com.ucucraft.countries.path.Path;
 
 public final class InfoSub implements SubCommand {
 
@@ -44,6 +46,11 @@ public final class InfoSub implements SubCommand {
             services.messages.sendRaw(player, "info-era",
                     "era", services.eras.eraOf(country).getDisplay());
         }
+        if (services.paths.enabled()) {
+            Path path = services.paths.pathOf(country);
+            services.messages.sendRaw(player, "info-path",
+                    "path", path != null ? path.getDisplay() : services.messages.text("none"));
+        }
         services.messages.sendRaw(player, "info-members",
                 "members", String.join(", ", country.getMemberNames()));
         services.messages.sendRaw(player, "info-chunks",
@@ -57,9 +64,7 @@ public final class InfoSub implements SubCommand {
 
     @Override
     public List<String> complete(Player player, String[] args) {
-        if (args.length == 1) {
-            return services.countries.allSorted().stream().map(Country::getName).toList();
-        }
-        return List.of();
+        return NameArgs.completeName(services.countries.allSorted().stream()
+                .map(Country::getName).toList(), args, 0);
     }
 }

@@ -7,6 +7,7 @@ import com.ucucraft.countries.Services;
 import com.ucucraft.countries.api.ChunkPos;
 import com.ucucraft.countries.era.Era;
 import com.ucucraft.countries.model.Country;
+import com.ucucraft.countries.path.Path;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -73,6 +74,9 @@ public final class CountryPlaceholders extends PlaceholderExpansion {
             case "wars" -> String.valueOf(country.getWars().size());
             case "era" -> eraDisplay(country);
             case "era_index" -> String.valueOf(country.getEraIndex());
+            case "path" -> pathDisplay(country);
+            case "path_id" -> country.hasPath() ? country.getPathId() : text("none");
+            case "path_tiers" -> String.valueOf(services.paths.registry().unlocked(country).size());
             case "chunks" -> String.valueOf(services.claims.count(country.getId()));
             case "chunk_limit" -> limit(country);
             default -> null;
@@ -91,6 +95,11 @@ public final class CountryPlaceholders extends PlaceholderExpansion {
     private String eraDisplay(Country country) {
         Era era = services.eras.eraOf(country);
         return era != null ? legacy(era.getDisplay()) : text("none");
+    }
+
+    private String pathDisplay(Country country) {
+        Path path = services.paths.pathOf(country);
+        return path != null ? legacy(path.getDisplay()) : text("none");
     }
 
     private String limit(Country country) {
