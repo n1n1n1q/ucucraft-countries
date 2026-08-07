@@ -13,6 +13,7 @@ import com.ucucraft.countries.claim.ClaimStorage;
 import com.ucucraft.countries.command.AcceptCommand;
 import com.ucucraft.countries.command.AdminCommand;
 import com.ucucraft.countries.command.CountryCommand;
+import com.ucucraft.countries.command.PathCommand;
 import com.ucucraft.countries.config.Messages;
 import com.ucucraft.countries.config.PluginConfig;
 import com.ucucraft.countries.era.EraGateListener;
@@ -23,6 +24,11 @@ import com.ucucraft.countries.era.EraRegistry;
 import com.ucucraft.countries.manager.CountryManager;
 import com.ucucraft.countries.manager.DiplomacyManager;
 import com.ucucraft.countries.manager.InviteManager;
+import com.ucucraft.countries.path.PathBuffTask;
+import com.ucucraft.countries.path.PathCombatListener;
+import com.ucucraft.countries.path.PathDropListener;
+import com.ucucraft.countries.path.PathManager;
+import com.ucucraft.countries.path.PathRegistry;
 import com.ucucraft.countries.storage.CountryStorage;
 import com.ucucraft.countries.title.CountryAreaProvider;
 import com.ucucraft.titles.TitlesProvider;
@@ -56,6 +62,8 @@ public final class CountriesPlugin extends JavaPlugin {
         messages.load(config.language(), config.prefix());
         Messages eraMessages = new Messages(this, "lang/eras");
         eraMessages.load(config.language(), config.eraPrefix());
+        Messages pathMessages = new Messages(this, "lang/paths");
+        pathMessages.load(config.language(), config.pathPrefix());
 
         countries = new CountryManager(config, new CountryStorage(this));
         countries.load();
@@ -65,16 +73,20 @@ public final class CountriesPlugin extends JavaPlugin {
         vaults = new VaultManager(config, new VaultStorage(this));
         vaults.load();
 
-        EraRegistry registry = new EraRegistry(this, vaults);
+        PathRegistry pathRegistry = new PathRegistry(this);
+        EraRegistry registry = new EraRegistry(this, vaults, pathRegistry);
         registry.load();
+        pathRegistry.load(registry);
 
-        claims = new ClaimManager(config, new ClaimStorage(this), registry);
+        claims = new ClaimManager(config, new ClaimStorage(this), registry, pathRegistry);
         claims.load();
 
         EraManager eras = new EraManager(registry, countries, eraMessages);
+        PathManager paths = new PathManager(pathRegistry, countries, claims, pathMessages);
+        eras.setPaths(paths);
 
-        Services services = new Services(this, config, messages, eraMessages,
-                countries, invites, diplomacy, eras, vaults, claims);
+        Services services = new Services(this, config, messages, eraMessages, pathMessages,
+                countries, invites, diplomacy, eras, paths, vaults, claims);
 
         getServer().getServicesManager().register(CountriesAPI.class,
                 new CountriesAPIImpl(services), this, ServicePriority.Normal);
@@ -89,6 +101,14 @@ public final class CountriesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EraGateListener(services), this);
         getServer().getPluginManager().registerEvents(new ClaimProtectionListener(services), this);
 
+        if (paths.enabled()) {
+            getServer().getPluginManager().registerEvents(new PathCombatListener(paths, countries), this);
+            getServer().getPluginManager().registerEvents(new PathDropListener(paths, countries), this);
+            long buffInterval = pathRegistry.effectIntervalTicks();
+            getServer().getScheduler().runTaskTimer(this,
+                    new PathBuffTask(this, paths, countries), buffInterval, buffInterval);
+        }
+
         locations = getServer().getPluginManager().isPluginEnabled("Titles")
                 ? TitlesProvider.locations() : null;
         if (locations != null) {
@@ -99,6 +119,7 @@ public final class CountriesPlugin extends JavaPlugin {
 
         bind("country", new CountryCommand(services, vaultListener));
         bind("accept", new AcceptCommand(services));
+        bind("path", new PathCommand(services));
         bind("countryadmin", new AdminCommand(services));
 
         long sweep = Math.max(1L, config.inviteSweepSeconds()) * 20L;

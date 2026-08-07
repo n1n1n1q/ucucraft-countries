@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -62,6 +63,14 @@ public final class CountryStorage {
             country.getCompletedCriteria().addAll(section.getStringList("completed-criteria"));
             country.setEraIndex(section.getInt("era", 0));
             country.setEraSince(section.getLong("era-since", System.currentTimeMillis()));
+            country.setPathId(section.getString("path"));
+            country.setPathSince(section.getLong("path-since", 0));
+            ConfigurationSection cooldowns = section.getConfigurationSection("ability-cooldowns");
+            if (cooldowns != null) {
+                for (String ability : cooldowns.getKeys(false)) {
+                    country.getAbilityCooldowns().put(ability, cooldowns.getLong(ability));
+                }
+            }
             result.add(country);
         }
         return result;
@@ -81,6 +90,11 @@ public final class CountryStorage {
             yaml.set(path + ".completed-criteria", new ArrayList<>(country.getCompletedCriteria()));
             yaml.set(path + ".era", country.getEraIndex());
             yaml.set(path + ".era-since", country.getEraSince());
+            yaml.set(path + ".path", country.getPathId());
+            yaml.set(path + ".path-since", country.getPathSince());
+            for (Map.Entry<String, Long> cooldown : country.getAbilityCooldowns().entrySet()) {
+                yaml.set(path + ".ability-cooldowns." + cooldown.getKey(), cooldown.getValue());
+            }
         }
         try {
             if (!plugin.getDataFolder().exists()) {

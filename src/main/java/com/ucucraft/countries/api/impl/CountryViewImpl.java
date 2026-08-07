@@ -9,6 +9,7 @@ import com.ucucraft.countries.api.ChunkPos;
 import com.ucucraft.countries.api.CountryView;
 import com.ucucraft.countries.era.Era;
 import com.ucucraft.countries.model.Country;
+import com.ucucraft.countries.path.Path;
 
 final class CountryViewImpl implements CountryView {
 
@@ -75,6 +76,17 @@ final class CountryViewImpl implements CountryView {
     @Override
     public long eraSince() {
         return country.getEraSince();
+    }
+
+    @Override
+    public String pathId() {
+        return country.getPathId();
+    }
+
+    @Override
+    public String pathDisplay() {
+        Path path = services.paths.pathOf(country);
+        return path != null ? path.getDisplay() : null;
     }
 
     @Override

@@ -9,14 +9,18 @@ commands:
   country:
     description: Manage countries.
     aliases: [c]
-    usage: /country <create|invite|accept|leave|disband|rename|info|list|era|claim|unclaim|vault|ally|war|peace>
+    usage: /country <create|invite|accept|leave|disband|rename|info|list|era|path|claim|unclaim|vault|ally|war|peace>
   accept:
     description: Accept a pending country invite.
     usage: /accept <player>
+  path:
+    description: Choose and inspect your country's path.
+    aliases: [cpath]
+    usage: /path [list|info <path>|choose <path>|use <ability>]
   countryadmin:
     description: Administrate country eras and criteria.
     aliases: [ca]
-    usage: /countryadmin <complete|revoke|setera|reload> ...
+    usage: /countryadmin <complete|revoke|setera|setpath|reload> ...
 permissions:
   countries.use:
     description: Access to base country commands.
@@ -27,6 +31,7 @@ permissions:
     children:
       countries.admin.criteria: true
       countries.admin.setera: true
+      countries.admin.setpath: true
       countries.admin.reload: true
       countries.admin.bypassclaim: true
   countries.admin.criteria:
@@ -34,6 +39,9 @@ permissions:
     default: op
   countries.admin.setera:
     description: Set a country's era directly.
+    default: op
+  countries.admin.setpath:
+    description: Set a country's path directly.
     default: op
   countries.admin.reload:
     description: Reload era and language files.

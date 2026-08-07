@@ -12,21 +12,25 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
+import com.ucucraft.countries.config.Sections;
 import com.ucucraft.countries.era.requirement.Requirement;
 import com.ucucraft.countries.era.requirement.RequirementFactory;
+import com.ucucraft.countries.path.PathRegistry;
 import com.ucucraft.countries.vault.VaultManager;
 
 public final class EraRegistry {
 
     private final Plugin plugin;
     private final VaultManager vaults;
+    private final PathRegistry paths;
     private final List<Era> eras = new ArrayList<>();
     private final Map<Material, Integer> gated = new HashMap<>();
     private FileConfiguration config;
 
-    public EraRegistry(Plugin plugin, VaultManager vaults) {
+    public EraRegistry(Plugin plugin, VaultManager vaults, PathRegistry paths) {
         this.plugin = plugin;
         this.vaults = vaults;
+        this.paths = paths;
     }
 
     public void load() {
@@ -39,11 +43,11 @@ public final class EraRegistry {
         }
         config = YamlConfiguration.loadConfiguration(file);
 
-        RequirementFactory factory = new RequirementFactory(vaults, plugin.getLogger());
+        RequirementFactory factory = new RequirementFactory(vaults, paths, plugin.getLogger());
         List<Map<?, ?>> raw = config.getMapList("eras");
         int index = 0;
         for (Map<?, ?> entry : raw) {
-            ConfigurationSection section = toSection(entry);
+            ConfigurationSection section = Sections.of(entry);
             String id = section.getString("id");
             if (id == null) {
                 plugin.getLogger().warning("Era at position " + index + " has no id, skipping");
@@ -51,7 +55,7 @@ public final class EraRegistry {
             }
             List<Requirement> requirements = new ArrayList<>();
             for (Map<?, ?> reqEntry : section.getMapList("requirements")) {
-                Requirement requirement = factory.create(toSection(reqEntry));
+                Requirement requirement = factory.create(Sections.of(reqEntry));
                 if (requirement != null) {
                     requirements.add(requirement);
                 }
@@ -72,21 +76,6 @@ public final class EraRegistry {
         if (eras.isEmpty()) {
             plugin.getLogger().warning("No eras defined in eras.yml; era gating is disabled");
         }
-    }
-
-    /** Nested maps have to become real sections; set() would store them as plain maps. */
-    private ConfigurationSection toSection(Map<?, ?> map) {
-        YamlConfiguration section = new YamlConfiguration();
-        for (Map.Entry<?, ?> entry : map.entrySet()) {
-            String key = String.valueOf(entry.getKey());
-            Object value = entry.getValue();
-            if (value instanceof Map<?, ?> child) {
-                section.createSection(key, child);
-            } else {
-                section.set(key, value);
-            }
-        }
-        return section;
     }
 
     public List<Era> all() {

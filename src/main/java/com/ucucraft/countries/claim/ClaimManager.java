@@ -13,6 +13,7 @@ import com.ucucraft.countries.config.PluginConfig;
 import com.ucucraft.countries.era.Era;
 import com.ucucraft.countries.era.EraRegistry;
 import com.ucucraft.countries.model.Country;
+import com.ucucraft.countries.path.PathRegistry;
 
 public final class ClaimManager {
 
@@ -21,13 +22,15 @@ public final class ClaimManager {
     private final PluginConfig config;
     private final ClaimStorage storage;
     private final EraRegistry eras;
+    private final PathRegistry paths;
     private final Map<ChunkPos, UUID> owners = new HashMap<>();
     private final Map<UUID, Set<ChunkPos>> byCountry = new LinkedHashMap<>();
 
-    public ClaimManager(PluginConfig config, ClaimStorage storage, EraRegistry eras) {
+    public ClaimManager(PluginConfig config, ClaimStorage storage, EraRegistry eras, PathRegistry paths) {
         this.config = config;
         this.storage = storage;
         this.eras = eras;
+        this.paths = paths;
     }
 
     public void load() {
@@ -83,7 +86,7 @@ public final class ClaimManager {
         }
 
         int playerBonus = perPlayer * country.getMembers().size();
-        return base + playerBonus;
+        return base + playerBonus + paths.claimBonus(country);
     }
 
     public Result claim(Country country, ChunkPos pos) {

@@ -1,0 +1,385 @@
+# Country paths. Full reference: docs/PATHS.md
+#
+# The founder picks one path with /country path choose <id>. A path grants buffs in
+# 'tiers'; a tier is keyed by an era id from eras.yml, so the milestone cadence is fully
+# yours - the defaults unlock on copper, golden and netherite only (every second era).
+#
+# Adding a path: copy any block under 'paths', give it a new id, display and tiers.
+# Moving a milestone: rename a tier key to another era id from eras.yml.
+# Retuning a buff: edit its numbers. /countryadmin reload applies everything live.
+#
+# Effect types:
+#   attribute    attribute: <Attribute>, amount: N, operation: add_number|add_scalar|multiply_scalar_1
+#   potion       potion: <PotionEffectType>, amplifier: N
+#   damage       direction: dealt|taken, multiplier: N, causes: [<DamageCause>, ...] (empty = every cause)
+#   drops        multiplier: N, materials: [<MATERIAL>, ...] (the BROKEN block; empty = every block)
+#   claim-limit  flat: N, per-member: N            (added to the era chunk allowance)
+#   era-cost     multiplier: N                     (resource requirements; 0.9 = 10% cheaper)
+#   ability      id, display, target: self|nearby|country, radius, cooldown-seconds, broadcast,
+#                effects: [{ potion: <type>, amplifier: N, seconds: N }, ...]
+#                Activated with /country path use <id>.
+#
+# Effects of the same kind add up across tiers (potions keep the strongest amplifier,
+# damage and era-cost multipliers multiply).
+#
+# Every effect takes an optional 'scope' - one condition or a list, all of which must hold:
+#   always, own-claims, foreign-claims, enemy-claims, any-claims, wilderness,
+#   at-war, at-peace, day, night, sneaking, underground
+
+settings:
+  enabled: true
+  # Only the country leader (the founder) may pick the path.
+  leader-only: true
+  # Allow swapping to another path once one was chosen.
+  allow-change: false
+  # Announce the choice to the whole server.
+  announce-choice: true
+  # Tell every member when an ascension unlocks a new tier.
+  announce-unlock: true
+  # How often passive buffs (attributes, potions) are refreshed, in ticks.
+  effect-interval-ticks: 40
+  potion:
+    ambient: true
+    particles: false
+    icon: true
+  # Y level below which the 'underground' scope applies.
+  underground-y: 40
+
+paths:
+  war:
+    display: "<red>Path of War</red>"
+    description:
+      - "<gray>Offense and defense in one identity: hit harder, hold your land longer."
+    tiers:
+      copper-age:
+        display: "<gold>Foundation</gold>"
+        description:
+          - "<gray>+1 attack damage and faster weapon recovery"
+          - "<gray>+2 hearts and +2 armor on your own land"
+        effects:
+          - type: attribute
+            attribute: ATTACK_DAMAGE
+            amount: 1.0
+            operation: add_number
+          - type: attribute
+            attribute: ATTACK_SPEED
+            amount: 0.4
+            operation: add_number
+          - type: attribute
+            attribute: MAX_HEALTH
+            amount: 4.0
+            operation: add_number
+            scope: own-claims
+          - type: attribute
+            attribute: ARMOR
+            amount: 2.0
+            operation: add_number
+            scope: own-claims
+      gold-age:
+        display: "<yellow>Growth</yellow>"
+        description:
+          - "<gray>-15% damage taken on your own land, -50% from explosions (siege resistance)"
+          - "<gray>Rally: buffs nearby citizens while at war"
+        effects:
+          - type: damage
+            direction: taken
+            multiplier: 0.85
+            scope: own-claims
+          - type: damage
+            direction: taken
+            multiplier: 0.5
+            causes: [ENTITY_EXPLOSION, BLOCK_EXPLOSION]
+            scope: own-claims
+          - type: ability
+            id: rally
+            display: "<red>Rally</red>"
+            target: nearby
+            radius: 24
+            cooldown-seconds: 300
+            scope: at-war
+            effects:
+              - potion: STRENGTH
+                amplifier: 0
+                seconds: 60
+              - potion: RESISTANCE
+                amplifier: 0
+                seconds: 60
+              - potion: SPEED
+                amplifier: 0
+                seconds: 60
+      netherite-age:
+        display: "<dark_red>Capstone</dark_red>"
+        description:
+          - "<gray>+20% knockback resistance while at war"
+          - "<gray>Warcry: buffs every online citizen while at war"
+        effects:
+          - type: attribute
+            attribute: KNOCKBACK_RESISTANCE
+            amount: 0.2
+            operation: add_number
+            scope: at-war
+          - type: ability
+            id: warcry
+            display: "<dark_red>Warcry</dark_red>"
+            target: country
+            cooldown-seconds: 3600
+            broadcast: true
+            scope: at-war
+            effects:
+              - potion: STRENGTH
+                amplifier: 1
+                seconds: 120
+              - potion: RESISTANCE
+                amplifier: 1
+                seconds: 120
+              - potion: FIRE_RESISTANCE
+                amplifier: 0
+                seconds: 120
+              - potion: REGENERATION
+                amplifier: 0
+                seconds: 60
+
+  shadows:
+    display: "<dark_purple>Path of Shadows</dark_purple>"
+    description:
+      - "<gray>Raiders and infiltrators: fastest in the dark, deadliest on foreign soil."
+    tiers:
+      copper-age:
+        display: "<gold>Foundation</gold>"
+        description:
+          - "<gray>Move at near-walking speed while sneaking"
+          - "<gray>Faster at night"
+        effects:
+          - type: attribute
+            attribute: SNEAKING_SPEED
+            amount: 0.3
+            operation: add_number
+          - type: attribute
+            attribute: MOVEMENT_SPEED
+            amount: 0.01
+            operation: add_number
+            scope: night
+      gold-age:
+        display: "<yellow>Growth</yellow>"
+        description:
+          - "<gray>Night vision after dark"
+          - "<gray>+15% damage dealt on enemy land"
+        effects:
+          - type: potion
+            potion: NIGHT_VISION
+            amplifier: 0
+            scope: night
+          - type: damage
+            direction: dealt
+            multiplier: 1.15
+            scope: enemy-claims
+      netherite-age:
+        display: "<dark_purple>Capstone</dark_purple>"
+        description:
+          - "<gray>Turn invisible while sneaking on foreign land"
+          - "<gray>Veil: hides nearby citizens for five minutes"
+        effects:
+          - type: potion
+            potion: INVISIBILITY
+            amplifier: 0
+            scope: [foreign-claims, sneaking]
+          - type: damage
+            direction: taken
+            multiplier: 0.85
+            scope: night
+          - type: ability
+            id: veil
+            display: "<dark_purple>Veil</dark_purple>"
+            target: nearby
+            radius: 16
+            cooldown-seconds: 900
+            effects:
+              - potion: INVISIBILITY
+                amplifier: 0
+                seconds: 300
+              - potion: SPEED
+                amplifier: 1
+                seconds: 300
+
+  industry:
+    display: "<gold>Path of Industry</gold>"
+    description:
+      - "<gray>Builders and miners: more output per swing, cheaper ascensions."
+    tiers:
+      copper-age:
+        display: "<gold>Foundation</gold>"
+        description:
+          - "<gray>Haste on your own land"
+          - "<gray>+25% ore yield"
+        effects:
+          - type: potion
+            potion: HASTE
+            amplifier: 0
+            scope: own-claims
+          - type: drops
+            multiplier: 1.25
+            materials:
+              - COAL_ORE
+              - DEEPSLATE_COAL_ORE
+              - COPPER_ORE
+              - DEEPSLATE_COPPER_ORE
+              - IRON_ORE
+              - DEEPSLATE_IRON_ORE
+              - GOLD_ORE
+              - DEEPSLATE_GOLD_ORE
+              - REDSTONE_ORE
+              - DEEPSLATE_REDSTONE_ORE
+              - LAPIS_ORE
+              - DEEPSLATE_LAPIS_ORE
+              - DIAMOND_ORE
+              - DEEPSLATE_DIAMOND_ORE
+              - EMERALD_ORE
+              - DEEPSLATE_EMERALD_ORE
+              - NETHER_GOLD_ORE
+              - NETHER_QUARTZ_ORE
+      gold-age:
+        display: "<yellow>Growth</yellow>"
+        description:
+          - "<gray>Era resource requirements cost 10% less"
+          - "<gray>+25% yield from every block, haste II underground"
+        effects:
+          - type: era-cost
+            multiplier: 0.9
+          - type: drops
+            multiplier: 1.25
+          - type: potion
+            potion: HASTE
+            amplifier: 1
+            scope: underground
+      netherite-age:
+        display: "<gold>Capstone</gold>"
+        description:
+          - "<gray>Era resource requirements cost a further 15% less"
+          - "<gray>Foundry: haste III and speed for every online citizen"
+        effects:
+          - type: era-cost
+            multiplier: 0.85
+          - type: ability
+            id: foundry
+            display: "<gold>Foundry</gold>"
+            target: country
+            cooldown-seconds: 1800
+            effects:
+              - potion: HASTE
+                amplifier: 2
+                seconds: 300
+              - potion: SPEED
+                amplifier: 0
+                seconds: 300
+
+  trade:
+    display: "<green>Path of Trade</green>"
+    description:
+      - "<gray>Merchants and settlers: the widest borders and the fattest caravans."
+    tiers:
+      copper-age:
+        display: "<gold>Foundation</gold>"
+        description:
+          - "<gray>+4 chunks, +1 chunk per member"
+          - "<gray>Better loot luck"
+        effects:
+          - type: claim-limit
+            flat: 4
+            per-member: 1
+          - type: attribute
+            attribute: LUCK
+            amount: 1.0
+            operation: add_number
+      gold-age:
+        display: "<yellow>Growth</yellow>"
+        description:
+          - "<gray>+6 more chunks, +1 more chunk per member"
+          - "<gray>Era resource requirements cost 10% less"
+        effects:
+          - type: claim-limit
+            flat: 6
+            per-member: 1
+          - type: era-cost
+            multiplier: 0.9
+      netherite-age:
+        display: "<green>Capstone</green>"
+        description:
+          - "<gray>+12 more chunks, +2 more chunks per member"
+          - "<gray>Caravan: speed, haste and saturation for every online citizen"
+        effects:
+          - type: claim-limit
+            flat: 12
+            per-member: 2
+          - type: ability
+            id: caravan
+            display: "<green>Caravan</green>"
+            target: country
+            cooldown-seconds: 1800
+            effects:
+              - potion: SPEED
+                amplifier: 1
+                seconds: 600
+              - potion: HASTE
+                amplifier: 0
+                seconds: 600
+              - potion: SATURATION
+                amplifier: 0
+                seconds: 60
+
+  diplomacy:
+    display: "<aqua>Path of Diplomacy</aqua>"
+    description:
+      - "<gray>Peacekeepers: a nation that is hard to hurt for as long as it stays at peace."
+    tiers:
+      copper-age:
+        display: "<gold>Foundation</gold>"
+        description:
+          - "<gray>+1 heart"
+          - "<gray>-5% damage taken while at peace"
+        effects:
+          - type: attribute
+            attribute: MAX_HEALTH
+            amount: 2.0
+            operation: add_number
+          - type: damage
+            direction: taken
+            multiplier: 0.95
+            scope: at-peace
+      gold-age:
+        display: "<yellow>Growth</yellow>"
+        description:
+          - "<gray>-15% damage taken while at peace, +4 chunks"
+          - "<gray>Era resource requirements cost 5% less"
+        effects:
+          - type: damage
+            direction: taken
+            multiplier: 0.85
+            scope: at-peace
+          - type: claim-limit
+            flat: 4
+          - type: era-cost
+            multiplier: 0.95
+      netherite-age:
+        display: "<aqua>Capstone</aqua>"
+        description:
+          - "<gray>+2 more hearts while at peace"
+          - "<gray>Concord: regeneration and resistance for every online citizen"
+        effects:
+          - type: attribute
+            attribute: MAX_HEALTH
+            amount: 4.0
+            operation: add_number
+            scope: at-peace
+          - type: ability
+            id: concord
+            display: "<aqua>Concord</aqua>"
+            target: country
+            cooldown-seconds: 1800
+            scope: at-peace
+            effects:
+              - potion: REGENERATION
+                amplifier: 0
+                seconds: 120
+              - potion: RESISTANCE
+                amplifier: 0
+                seconds: 300

@@ -1,8 +1,10 @@
 package com.ucucraft.countries.model;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,8 +20,11 @@ public final class Country {
     private final Set<UUID> allies = new LinkedHashSet<>();
     private final Set<UUID> wars = new LinkedHashSet<>();
     private final Set<String> completedCriteria = new LinkedHashSet<>();
+    private final Map<String, Long> abilityCooldowns = new LinkedHashMap<>();
     private int eraIndex;
     private long eraSince = System.currentTimeMillis();
+    private String pathId;
+    private long pathSince;
 
     public Country(UUID id, String name, UUID leader) {
         this.id = id;
@@ -119,6 +124,32 @@ public final class Country {
 
     public void setEraSince(long eraSince) {
         this.eraSince = eraSince;
+    }
+
+    /** Id of the chosen path from paths.yml, or null when none was picked. */
+    public String getPathId() {
+        return pathId;
+    }
+
+    public void setPathId(String pathId) {
+        this.pathId = pathId;
+    }
+
+    public boolean hasPath() {
+        return pathId != null && !pathId.isEmpty();
+    }
+
+    public long getPathSince() {
+        return pathSince;
+    }
+
+    public void setPathSince(long pathSince) {
+        this.pathSince = pathSince;
+    }
+
+    /** Ability id to the epoch millis it was last used. */
+    public Map<String, Long> getAbilityCooldowns() {
+        return abilityCooldowns;
     }
 
     public String getLeaderName() {

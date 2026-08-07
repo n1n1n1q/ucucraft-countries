@@ -31,6 +31,12 @@ public interface CountryView {
     /** Epoch millis the country entered its current era. */
     long eraSince();
 
+    /** Path id from paths.yml, or null when the country picked none. */
+    String pathId();
+
+    /** Display name of the chosen path, or null when the country picked none. */
+    String pathDisplay();
+
     Set<ChunkPos> claims();
 
     /** Maximum chunks this country may own; {@link Integer#MAX_VALUE} when unlimited. */
